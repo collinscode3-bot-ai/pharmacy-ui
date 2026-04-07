@@ -7,6 +7,11 @@ html, body {
 	margin: 0;
 }
 
+/* Global typography reduction by ~0.5pt across screens */
+html {
+	font-size: 15.33px;
+}
+
 /* Utility: responsive container */
 .container {
 	padding: 16px;

@@ -1,0 +1,215 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  color: #1f2430;
+}
+
+.login-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at left 92%, rgba(180, 226, 229, 0.65) 0%, rgba(180, 226, 229, 0) 35%),
+    linear-gradient(180deg, #edf0f5 0%, #eef2f6 100%);
+}
+
+.top-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 32px;
+  background: rgba(236, 239, 245, 0.88);
+  border-bottom: 1px solid #dce2eb;
+}
+
+.brand {
+  font-size: 1.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #0f3d92;
+}
+
+.top-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.top-actions .mat-mdc-icon-button {
+  color: #61708a;
+}
+
+.content-wrap {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 64px 16px 28px;
+}
+
+.login-card {
+  width: min(100%, 450px);
+  margin: 0 auto;
+  padding: 34px 28px 22px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 20px 42px rgba(70, 84, 111, 0.11);
+  text-align: center;
+}
+
+.brand-icon {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 18px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: #0f3d92;
+  color: #ffffff;
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 10px auto 22px;
+  max-width: 300px;
+  color: #4b566b;
+  font-size: 1.04rem;
+  line-height: 1.45;
+}
+
+.login-form {
+  text-align: left;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2b3446;
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.password-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.support-link {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: #0f3d92;
+}
+
+.login-field {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.login-field .mat-mdc-form-field-icon-prefix,
+.login-field .mat-mdc-form-field-icon-suffix {
+  color: #798292;
+}
+
+.sign-in-btn {
+  width: 100%;
+  margin-top: 12px;
+  height: 48px;
+  border-radius: 10px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.sign-in-btn .mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signup-line {
+  margin: 22px 0 4px;
+  text-align: center;
+  color: #424a5e;
+  font-size: 0.95rem;
+}
+
+.signup-line a {
+  color: #0f3d92;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.encryption-line {
+  margin-top: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #848d9d;
+  font-size: 0.73rem;
+  letter-spacing: 0.12em;
+}
+
+.encryption-line .mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
+.login-footer {
+  margin-top: 88px;
+  text-align: center;
+  color: #8a93a3;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.footer-links {
+  display: flex;
+  gap: 26px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #8892a4;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .top-strip {
+    padding: 0 16px;
+    height: 64px;
+  }
+
+  .brand {
+    font-size: 1.45rem;
+  }
+
+  .content-wrap {
+    padding-top: 38px;
+  }
+
+  .login-card {
+    padding: 26px 18px 16px;
+    border-radius: 12px;
+  }
+
+  .login-card h1 {
+    font-size: 1.75rem;
+  }
+
+  .login-footer {
+    margin-top: 44px;
+  }
+}

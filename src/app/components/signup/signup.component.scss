@@ -1,0 +1,298 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  color: #1b2432;
+}
+
+.signup-page {
+  min-height: 100vh;
+  padding: 34px 16px 22px;
+  background:
+    radial-gradient(circle at left 92%, rgba(177, 226, 232, 0.62) 0%, rgba(177, 226, 232, 0) 36%),
+    linear-gradient(180deg, #edf1f6 0%, #edf1f4 100%);
+}
+
+.signup-shell {
+  width: min(100%, 980px);
+  margin: 64px auto 0;
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 42% 58%;
+  box-shadow: 0 22px 44px rgba(63, 73, 92, 0.18);
+}
+
+.brand-panel {
+  background: linear-gradient(170deg, #0c3280 0%, #0b378a 55%, #0a347d 100%);
+  color: #ffffff;
+  padding: 34px 36px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 2.15rem;
+  font-weight: 700;
+  margin-bottom: 52px;
+}
+
+.brand-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: #f1f5ff;
+  color: #0c3280;
+}
+
+.brand-icon .mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.brand-panel h1 {
+  margin: 0;
+  font-size: 3.18rem;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.brand-panel p {
+  margin: 22px 0 30px;
+  color: #a8bddf;
+  font-size: 1.65rem;
+  line-height: 1.46;
+}
+
+.feature-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.feature-list .mat-icon {
+  width: 19px;
+  height: 19px;
+  font-size: 19px;
+  color: #7ee4ef;
+}
+
+.trust-line {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid rgba(169, 189, 225, 0.27);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #dce7ff;
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+}
+
+.avatars {
+  display: flex;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #e5ecfb;
+  background: linear-gradient(180deg, #f2d6ba 0%, #d9a678 100%);
+}
+
+.avatar.two {
+  margin-left: -8px;
+  background: linear-gradient(180deg, #cde2f2 0%, #8ab5d8 100%);
+}
+
+.form-panel {
+  background: #ffffff;
+  padding: 36px 44px 30px;
+}
+
+.form-panel h2 {
+  margin: 0;
+  font-size: 2.15rem;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.intro {
+  margin: 10px 0 24px;
+  color: #4f596d;
+  font-size: 1.22rem;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+}
+
+.two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field-wrap label {
+  display: block;
+  margin-bottom: 6px;
+  color: #2a3446;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.field-wrap .mat-mdc-form-field {
+  width: 100%;
+}
+
+.field-wrap .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.field-wrap .mat-mdc-form-field-icon-prefix {
+  color: #6f7a8c;
+}
+
+.terms {
+  margin-top: 4px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #495366;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.terms input {
+  margin-top: 3px;
+}
+
+.terms a {
+  color: #0d3c92;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.create-btn {
+  margin-top: 10px;
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.create-btn .mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-line {
+  margin: 18px 0 0;
+  text-align: center;
+  color: #4c5668;
+  font-size: 1.02rem;
+}
+
+.login-line a {
+  color: #0d3c92;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.signup-footer {
+  margin-top: 24px;
+  text-align: center;
+  color: #8a93a3;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #8b95a6;
+  font-weight: 600;
+}
+
+@media (max-width: 960px) {
+  .signup-shell {
+    margin-top: 20px;
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel {
+    padding: 28px 24px;
+  }
+
+  .brand-head {
+    margin-bottom: 26px;
+    font-size: 1.8rem;
+  }
+
+  .brand-panel h1 {
+    font-size: 2.26rem;
+  }
+
+  .brand-panel p {
+    font-size: 1.08rem;
+  }
+
+  .feature-list li {
+    font-size: 1rem;
+  }
+
+  .form-panel {
+    padding: 26px 20px 24px;
+  }
+
+  .form-panel h2 {
+    font-size: 1.7rem;
+  }
+
+  .intro {
+    font-size: 1rem;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .trust-line {
+    margin-top: 22px;
+    font-size: 0.78rem;
+    letter-spacing: 0.11em;
+  }
+}

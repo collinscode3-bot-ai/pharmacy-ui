@@ -1,0 +1,69 @@
+<div class="login-page">
+  <header class="top-strip">
+    <div class="brand">PharmaPrecision</div>
+    <div class="top-actions" aria-label="Utilities">
+      <button mat-icon-button type="button" aria-label="Language">
+        <mat-icon>language</mat-icon>
+      </button>
+      <button mat-icon-button type="button" aria-label="Help">
+        <mat-icon>help</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <main class="content-wrap">
+    <section class="login-card" aria-label="Sign in form">
+      <div class="brand-icon">
+        <mat-icon>medical_services</mat-icon>
+      </div>
+
+      <h1>Welcome Back</h1>
+      <p class="subtitle">Enter your credentials to access your clinical dashboard.</p>
+
+      <form class="login-form" novalidate>
+        <label class="field-label" for="username">USERNAME OR EMAIL</label>
+        <mat-form-field appearance="fill" class="login-field">
+          <mat-icon matPrefix>person</mat-icon>
+          <input id="username" matInput type="email" placeholder="clinical.admin@pharma.com" />
+        </mat-form-field>
+
+        <div class="password-row">
+          <label class="field-label" for="password">PASSWORD</label>
+          <a routerLink="/forgot-password" class="support-link">FORGOT PASSWORD?</a>
+        </div>
+
+        <mat-form-field appearance="fill" class="login-field">
+          <mat-icon matPrefix>lock</mat-icon>
+          <input id="password" matInput type="password" placeholder=".........." />
+          <button mat-icon-button matSuffix type="button" aria-label="Show password">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <button class="sign-in-btn" mat-flat-button color="primary" type="submit">
+          <span>Sign In</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </form>
+
+      <p class="signup-line">
+        New to the platform?
+        <a routerLink="/signup">Create an Account</a>
+      </p>
+    </section>
+
+    <div class="encryption-line">
+      <mat-icon>verified_user</mat-icon>
+      <span>AES-256 CLINICAL GRADE ENCRYPTION</span>
+    </div>
+
+    <footer class="login-footer">
+      <div class="footer-links">
+        <a href="#">PRIVACY POLICY</a>
+        <a href="#">TERMS OF SERVICE</a>
+        <a href="#">SECURITY WHITEPAPER</a>
+      </div>
+      <p>© 2024 PHARMAPRECISION MANAGEMENT SYSTEMS. CLINICAL GRADE SECURITY.</p>
+    </footer>
+  </main>
+</div>
