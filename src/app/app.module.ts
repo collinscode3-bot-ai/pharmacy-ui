@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +17,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { PleaseWaitComponent } from './shared/please-wait/please-wait.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
@@ -27,6 +29,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     ,SidebarComponent,
     HeaderComponent,
     DashboardComponent
+    ,PleaseWaitComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +48,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
       useClass: AuthInterceptor,
       multi: true
     }
+    ,{ provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent]
 })

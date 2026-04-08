@@ -16,8 +16,13 @@
         <span class="label">Daily Sales</span>
         <span class="badge blue"><mat-icon>payments</mat-icon></span>
       </div>
-      <div class="value">₹12,840.00 <small>+14%</small></div>
-      <p>v last average Tuesday</p>
+      <div class="value">
+        <ng-container *ngIf="!loading; else loadingTpl">
+          <span *ngIf="dailySalesSummary; else noData">₹{{ dailySalesSummary.total | number:'1.2-2' }} <small *ngIf="dailySalesSummary.change">{{ dailySalesSummary.change }}</small></span>
+        </ng-container>
+        <ng-template #noData>—</ng-template>
+      </div>
+      <p>{{ dailySalesSummary?.note || 'v last average' }}</p>
     </article>
 
     <article class="card metric">
@@ -25,7 +30,11 @@
         <span class="label">Low Stock Alerts</span>
         <span class="badge red"><mat-icon>warning</mat-icon></span>
       </div>
-      <div class="value">12 <small class="down">+2 today</small></div>
+      <div class="value">
+        <ng-container *ngIf="!loading; else loadingTpl">
+          <span>{{ lowStockAlerts.length }} <small class="down" *ngIf="lowStockAlerts.length && dailySalesSummary?.lowStockChange">{{ dailySalesSummary.lowStockChange }}</small></span>
+        </ng-container>
+      </div>
       <p>Needs immediate replenishment</p>
     </article>
 
@@ -34,9 +43,17 @@
         <span class="label">Expiring Items</span>
         <span class="badge amber"><mat-icon>event_busy</mat-icon></span>
       </div>
-      <div class="value">08 <small class="pill">Within 30 Days</small></div>
+      <div class="value">
+        <ng-container *ngIf="!loading; else loadingTpl">
+          <span>{{ expiringItems.length }} <small class="pill">Within 30 Days</small></span>
+        </ng-container>
+      </div>
       <p>Inventory risk flagged</p>
     </article>
+
+    <ng-template #loadingTpl>
+      <app-please-wait message="Please wait..."></app-please-wait>
+    </ng-template>
   </section>
 
   <section class="main-grid">
@@ -50,13 +67,17 @@
       </div>
 
       <div class="chart-placeholder" aria-label="Sales chart preview">
-        <div class="bar" style="height: 33%"></div>
-        <div class="bar" style="height: 50%"></div>
-        <div class="bar" style="height: 38%"></div>
-        <div class="bar" style="height: 67%"></div>
-        <div class="bar" style="height: 56%"></div>
-        <div class="bar" style="height: 75%"></div>
-        <div class="bar" style="height: 82%"></div>
+        <ng-container *ngIf="!loading; else chartLoading">
+          <ng-container *ngIf="salesHeights.length; else noChart">
+            <div class="bar" *ngFor="let h of salesHeights" [style.height.%]="h"></div>
+          </ng-container>
+        </ng-container>
+        <ng-template #chartLoading>
+          <div class="chart-loading">Loading chart…</div>
+        </ng-template>
+        <ng-template #noChart>
+          <div class="chart-empty">No sales data</div>
+        </ng-template>
       </div>
     </article>
 
@@ -67,96 +88,69 @@
       </div>
 
       <ul>
-        <li>
-          <span class="dot"><mat-icon>shopping_cart</mat-icon></span>
-          <div>
-            <div class="name">Amoxicillin 500mg</div>
-            <div class="meta">Inv #4920 • 2 mins ago</div>
-          </div>
-          <div class="amt">
-            <strong>₹45.00</strong>
-            <small class="status paid">Paid</small>
-          </div>
-        </li>
-        <li>
-          <span class="dot gray"><mat-icon>schedule</mat-icon></span>
-          <div>
-            <div class="name">Lisinopril Stock Intake</div>
-            <div class="meta">System • 15 mins ago</div>
-          </div>
-          <div class="amt">
-            <strong>+100</strong>
-            <small class="status inventory">Inventory</small>
-          </div>
-        </li>
-        <li>
-          <span class="dot red"><mat-icon>cancel</mat-icon></span>
-          <div>
-            <div class="name">Insulin Aspart Return</div>
-            <div class="meta">Inv #4891 • 42 mins ago</div>
-          </div>
-          <div class="amt">
-            <strong class="neg">-₹120.50</strong>
-            <small class="status void">Void</small>
-          </div>
-        </li>
-        <li>
-          <span class="dot"><mat-icon>shopping_cart</mat-icon></span>
-          <div>
-            <div class="name">Metformin 1000mg</div>
-            <div class="meta">Inv #4890 • 1 hr ago</div>
-          </div>
-          <div class="amt">
-            <strong>₹22.30</strong>
-            <small class="status paid">Paid</small>
-          </div>
-        </li>
-      </ul>
+        <ng-container *ngIf="!loading; else activityLoading">
+          <li *ngFor="let act of recentActivity">
+            <span class="dot">
+              <mat-icon>{{ act.icon || 'shopping_cart' }}</mat-icon>
+            </span>
+            <div>
+              <div class="name">{{ act.title || act.customerName || act.item || 'Activity' }}</div>
+              <div class="meta">{{ act.meta || act.note || act.when || '' }}</div>
+            </div>
+            <div class="amt">
+              <strong *ngIf="act.amount">{{ act.amount | currency:'INR':'symbol':'1.2-2' }}</strong>
+              <strong *ngIf="act.count && !act.amount">+{{ act.count }}</strong>
+              <small class="status" [ngClass]="act.status || 'info'">{{ act.statusLabel || act.status || '' }}</small>
+            </div>
+          </li>
+          <li *ngIf="!recentActivity?.length">No recent activity</li>
+        </ng-container>
+        <ng-template #activityLoading>
+          <li>Loading activity…</li>
+        </ng-template>
+        </ul>
+      
     </article>
   </section>
-
-  <section class="card inventory-list">
-    <div class="panel-top inv-head">
-      <h3>Critical Inventory Monitor</h3>
-      <div class="table-actions">
-        <button mat-icon-button><mat-icon>filter_alt</mat-icon></button>
-        <button mat-icon-button><mat-icon>download</mat-icon></button>
-        <button mat-fab color="primary" class="add-fab"><mat-icon>add</mat-icon></button>
+  
+    <section class="card inventory-list">
+      <div class="panel-top inv-head">
+        <h3>Critical Inventory Monitor</h3>
+        <div class="table-actions">
+          <button mat-icon-button><mat-icon>filter_alt</mat-icon></button>
+          <button mat-icon-button><mat-icon>download</mat-icon></button>
+          <button mat-fab color="primary" class="add-fab"><mat-icon>add</mat-icon></button>
+        </div>
       </div>
-    </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Medication Name</th>
-          <th>Category</th>
-          <th>Stock Status</th>
-          <th>Expiry Risk</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <strong>Atorvastatin Calcium</strong>
-            <small>SKU: PHARM-10293</small>
-          </td>
-          <td>Cardiovascular</td>
-          <td><span class="risk red">12 Units (Critical)</span></td>
-          <td><span class="chip">Sep 2025</span></td>
-          <td><button mat-stroked-button color="primary">Reorder</button></td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Levothyroxine Sodium</strong>
-            <small>SKU: PHARM-88210</small>
-          </td>
-          <td>Hormonal</td>
-          <td><span class="risk amber">48 Units (Warning)</span></td>
-          <td><span class="chip amber">22 Days Left</span></td>
-          <td><button mat-stroked-button color="primary">Audit</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+      <table>
+        <thead>
+          <tr>
+            <th>Medication Name</th>
+            <th>Category</th>
+            <th>Stock Status</th>
+            <th>Expiry Risk</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="!criticalInventory.length && !loading">
+            <td colspan="5" class="muted">No critical inventory items found.</td>
+          </tr>
+          <tr *ngIf="loading">
+            <td colspan="5"><app-please-wait message="Loading inventory..."></app-please-wait></td>
+          </tr>
+          <tr *ngFor="let item of criticalInventory">
+            <td>
+              <strong>{{ item.name || item.productName || item.medication_name || '—' }}</strong>
+              <small>SKU: {{ item.sku || item.skuCode || item.code || '—' }}</small>
+            </td>
+            <td>{{ item.category || item.categoryName || '—' }}</td>
+            <td><span class="risk" [ngClass]="{ 'red': (item.stock || item.quantity) <= 20, 'amber': (item.stock || item.quantity) > 20 && (item.stock || item.quantity) <= 50 }">{{ (item.stock ?? item.quantity ?? item.units) + ' Units' }}</span></td>
+            <td><span class="chip" [ngClass]="{ 'amber': item.daysLeft && item.daysLeft <= 30 }">{{ item.expiryDate || item.expiry || (item.daysLeft ? (item.daysLeft + ' Days Left') : '—') }}</span></td>
+            <td><button mat-stroked-button color="primary">Reorder</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 </div>

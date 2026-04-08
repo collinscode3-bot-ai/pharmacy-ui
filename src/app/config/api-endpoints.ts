@@ -18,8 +18,12 @@ export const API_ENDPOINTS = {
   },
 
   DASHBOARD: {
-    OVERVIEW: `${BASE}/api/dashboard/overview`,
-    SALES_TRENDS: `${BASE}/api/dashboard/sales-trends`
+    SUMMARY: `${BASE}/api/dashboard/summary`,
+    LOW_STOCK: `${BASE}/api/dashboard/low-stock`,
+    EXPIRING: `${BASE}/api/dashboard/expiring`,
+    SALES_TRENDS: `${BASE}/api/dashboard/sales-trends`,
+    RECENT_ACTIVITY: `${BASE}/api/dashboard/recent-activity`,
+    CRITICAL_INVENTORY: `${BASE}/api/dashboard/critical-inventory`
   },
 
   MEDICINES: {
