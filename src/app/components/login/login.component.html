@@ -20,7 +20,7 @@
       <h1>Welcome Back</h1>
       <p class="subtitle">Enter your credentials to access your pharmacy dashboard.</p>
 
-      <form class="login-form" novalidate>
+      <form class="login-form" novalidate (submit)="onSubmit($event)">
         <label class="field-label" for="username">USERNAME OR EMAIL</label>
         <mat-form-field appearance="fill" class="login-field">
           <mat-icon matPrefix>person</mat-icon>

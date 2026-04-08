@@ -2,9 +2,26 @@
 
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
+:root {
+  --app-font-stack: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+}
+
 html, body {
 	height: 100%;
 	margin: 0;
+	font-family: var(--app-font-stack);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Keep Angular Material controls on the same typography stack */
+.mat-mdc-button-base,
+.mat-mdc-form-field,
+.mat-mdc-input-element,
+.mat-mdc-card,
+.mat-mdc-menu-item,
+.mat-mdc-option {
+  font-family: var(--app-font-stack) !important;
 }
 
 /* Global typography reduction by ~0.5pt across screens */

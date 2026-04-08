@@ -1,1 +1,14 @@
-<router-outlet></router-outlet>
+<ng-container *ngIf="isDashboard; else auth">
+	<div class="app-shell">
+		<app-sidebar></app-sidebar>
+		<div class="main-area">
+			<app-header></app-header>
+			<main class="main-content">
+				<router-outlet></router-outlet>
+			</main>
+		</div>
+	</div>
+</ng-container>
+<ng-template #auth>
+	<router-outlet></router-outlet>
+</ng-template>

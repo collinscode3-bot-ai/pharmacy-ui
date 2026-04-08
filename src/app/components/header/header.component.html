@@ -1,0 +1,30 @@
+<header class="app-header">
+  <div class="header-left">
+    <div class="clinic-card">
+      <div class="clinic-icon">
+        <mat-icon>local_hospital</mat-icon>
+      </div>
+      <div>
+        <div class="clinic-title">Manish Clinic</div>
+        <div class="clinic-sub">Pharmacy</div>
+      </div>
+    </div>
+
+    <div class="search-wrap" aria-label="Quick search">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Quick search catalog or patients..." />
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <div class="user-block" (click)="toggleMenu()" [class.open]="menuOpen">
+      <div class="avatar" aria-hidden="true">A</div>
+      <div class="user-name">{{ userName }}</div>
+      <mat-icon class="chev">expand_more</mat-icon>
+
+      <div class="user-menu" *ngIf="menuOpen">
+        <button mat-menu-item class="menu-item">Edit Profile</button>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,15 @@
+.app-shell {
+  display:flex; min-height:100vh; background:#f8fafc;
+}
+.main-area { flex:1; display:flex; flex-direction:column; }
+.main-content {
+  padding:20px;
+  width:80%;
+  margin:0 auto;
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    width:100%;
+  }
+}
