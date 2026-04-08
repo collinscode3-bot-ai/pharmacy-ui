@@ -20,30 +20,34 @@
       <h1>Welcome Back</h1>
       <p class="subtitle">Enter your credentials to access your pharmacy dashboard.</p>
 
+      <div *ngIf="error" class="login-error" role="alert">{{ error }}</div>
+
       <form class="login-form" novalidate (submit)="onSubmit($event)">
-        <label class="field-label" for="username">USERNAME OR EMAIL</label>
+        <label class="field-label" for="username">USERNAME OR EMAIL <span class="required-indicator" aria-hidden="true">*</span></label>
         <mat-form-field appearance="fill" class="login-field">
           <mat-icon matPrefix>person</mat-icon>
-          <input id="username" matInput type="email" placeholder="clinical.admin@pharma.com" />
+            <input id="username" name="username" required aria-required="true" [(ngModel)]="username" #usernameModel="ngModel" matInput type="email" placeholder="clinical.admin@pharma.com" />
+            <mat-error *ngIf="usernameModel.invalid && (usernameModel.touched || submitted)">Username is required.</mat-error>
         </mat-form-field>
 
         <div class="password-row">
-          <label class="field-label" for="password">PASSWORD</label>
+          <label class="field-label" for="password">PASSWORD <span class="required-indicator" aria-hidden="true">*</span></label>
           <a routerLink="/forgot-password" class="support-link">FORGOT PASSWORD?</a>
         </div>
 
-        <mat-form-field appearance="fill" class="login-field">
-          <mat-icon matPrefix>lock</mat-icon>
-          <input id="password" matInput type="password" placeholder=".........." />
-          <button mat-icon-button matSuffix type="button" aria-label="Show password">
-            <mat-icon>visibility</mat-icon>
-          </button>
-        </mat-form-field>
+          <mat-form-field appearance="fill" class="login-field">
+            <mat-icon matPrefix>lock</mat-icon>
+            <input id="password" name="password" required aria-required="true" [(ngModel)]="password" #passwordModel="ngModel" matInput type="password" placeholder=".........." />
+            <button mat-icon-button matSuffix type="button" aria-label="Show password">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <mat-error *ngIf="passwordModel.invalid && (passwordModel.touched || submitted)">Password is required.</mat-error>
+          </mat-form-field>
 
-        <button class="sign-in-btn" mat-flat-button color="primary" type="submit">
-          <span>Sign In</span>
-          <mat-icon>arrow_forward</mat-icon>
-        </button>
+          <button class="sign-in-btn" mat-flat-button color="primary" type="submit">
+            <span>Sign In</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
       </form>
 
       <p class="signup-line">
@@ -52,10 +56,10 @@
       </p>
     </section>
 
-    <div class="encryption-line">
+    <!-- <div class="encryption-line">
       <mat-icon>verified_user</mat-icon>
       <span>AES-256 CLINICAL GRADE ENCRYPTION</span>
-    </div>
+    </div> -->
 
     <footer class="login-footer">
       <div class="footer-links">

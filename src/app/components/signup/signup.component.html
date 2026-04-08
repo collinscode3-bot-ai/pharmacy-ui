@@ -39,22 +39,34 @@
     </section>
 
     <section class="form-panel" aria-label="Create account">
-      <h2>Create account</h2>
-      <p class="intro">Please provide your credentials to begin.</p>
+      <h2 *ngIf="!isRecoveryFlow">Create account</h2>
+      <h2 *ngIf="isRecoveryFlow">Recover Account</h2>
+      <p *ngIf="!successMessage" class="intro">Please provide your credentials to begin.</p>
+      <div *ngIf="successMessage" class="signup-success" role="status">{{ successMessage }}</div>
 
-      <form class="signup-form" novalidate>
+      <div *ngIf="error" class="signup-error" role="alert">{{ error }}</div>
+
+      <form class="signup-form" novalidate (submit)="onSubmit($event)">
         <div class="grid two-col">
           <div class="field-wrap">
-            <label for="fullName">FULL NAME</label>
+            <label for="fullName">FULL NAME <span class="required-indicator" aria-hidden="true">*</span></label>
             <mat-form-field appearance="fill">
-              <input id="fullName" matInput placeholder="Dr. Jane Smith" />
+              <input id="fullName" name="fullName" required aria-required="true" [(ngModel)]="fullName" #fullNameModel="ngModel" matInput placeholder="Dr. Jane Smith" />
+              <mat-error *ngIf="fullNameModel.invalid && (fullNameModel.touched || submitted)">Full name is required.</mat-error>
             </mat-form-field>
           </div>
 
           <div class="field-wrap">
-            <label for="pharmacyName">PHARMACY NAME</label>
+            <label for="role">ROLE <span class="required-indicator" aria-hidden="true">*</span></label>
             <mat-form-field appearance="fill">
-              <input id="pharmacyName" matInput placeholder="Central Apothecary" />
+              <mat-select id="role" name="role" required aria-required="true" [(ngModel)]="role" #roleModel="ngModel" placeholder="Select role">
+                <mat-option value="Admin">Admin</mat-option>
+                <mat-option value="Doctor">Doctor</mat-option>
+                <mat-option value="Pharmacist">Pharmacist</mat-option>
+                <mat-option value="Cashier">Cashier</mat-option>
+                <mat-option value="Receptionist">Receptionist</mat-option>
+              </mat-select>
+              <mat-error *ngIf="roleModel.invalid && (roleModel.touched || submitted)">Please select a role.</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -68,27 +80,31 @@
         </div> -->
 
         <div class="field-wrap">
-          <label for="email">WORK EMAIL</label>
+          <label for="email">WORK EMAIL <span class="required-indicator" aria-hidden="true">*</span></label>
           <mat-form-field appearance="fill">
             <mat-icon matPrefix>mail</mat-icon>
-            <input id="email" matInput type="email" placeholder="jane.smith@pharmacy.com" />
+            <input id="email" name="username" required aria-required="true" [(ngModel)]="username" #usernameModel="ngModel" matInput type="email" placeholder="jane.smith@pharmacy.com" />
+            <mat-error *ngIf="usernameModel.errors?.['required'] && (usernameModel.touched || submitted)">Work email is required.</mat-error>
+            <mat-error *ngIf="usernameModel.errors?.['email'] && (usernameModel.touched || submitted)">Enter a valid email address.</mat-error>
           </mat-form-field>
         </div>
 
         <div class="grid two-col">
           <div class="field-wrap">
-            <label for="password">PASSWORD</label>
+            <label for="password">PASSWORD <span class="required-indicator" aria-hidden="true">*</span></label>
             <mat-form-field appearance="fill">
               <mat-icon matPrefix>lock</mat-icon>
-              <input id="password" matInput type="password" placeholder="••••••••" />
+              <input id="password" name="password" required aria-required="true" [(ngModel)]="password" #passwordModel="ngModel" matInput type="password" placeholder="••••••••" />
+              <mat-error *ngIf="passwordModel.invalid && (passwordModel.touched || submitted)">Password is required.</mat-error>
             </mat-form-field>
           </div>
 
           <div class="field-wrap">
-            <label for="confirm">CONFIRM</label>
+            <label for="confirm">CONFIRM <span class="required-indicator" aria-hidden="true">*</span></label>
             <mat-form-field appearance="fill">
               <mat-icon matPrefix>shield</mat-icon>
-              <input id="confirm" matInput type="password" placeholder="••••••••" />
+              <input id="confirm" name="confirm" required aria-required="true" [(ngModel)]="confirm" #confirmModel="ngModel" matInput type="password" placeholder="••••••••" />
+              <mat-error *ngIf="confirmModel.invalid && (confirmModel.touched || submitted)">Confirmation is required.</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -102,7 +118,7 @@
         </label>
 
         <button class="create-btn" mat-flat-button color="primary" type="submit">
-          <span>Create Account</span>
+          <span>{{ isRecoveryFlow ? 'Recover' : 'Create Account' }}</span>
           <mat-icon>arrow_forward</mat-icon>
         </button>
 

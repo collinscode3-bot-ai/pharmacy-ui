@@ -38,8 +38,9 @@
       <mat-icon>help</mat-icon>
       <span>Support</span>
     </a>
-    <a class="utility" href="javascript:void(0)">
-      <mat-icon>logout</mat-icon>
+    <a class="utility" (click)="logout()" role="button">
+      <mat-icon class="icon-default">logout</mat-icon>
+      <mat-icon class="icon-hover">pan_tool</mat-icon>
       <span>Logout</span>
     </a>
   </div>

@@ -71,7 +71,8 @@
               "browserTarget": "pharmacy-ui:build:production"
             },
             "development": {
-              "browserTarget": "pharmacy-ui:build:development"
+              "browserTarget": "pharmacy-ui:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

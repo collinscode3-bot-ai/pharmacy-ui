@@ -84,6 +84,32 @@
   text-align: left;
 }
 
+/* Error message shown between header and form */
+.login-error {
+  color: #b91c1c; /* vivid red */
+  font-weight: 400;
+  text-align: center;
+  margin: 14px 0;
+  font-size: 0.98rem;
+}
+
+/* required field indicator */
+.required-indicator {
+  color: #b91c1c;
+  margin-left: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* mat-error styling fallback */
+.mat-mdc-form-field .mat-error, .mat-error {
+  color: #b91c1c;
+  font-weight: 400;
+  font-size: 0.88rem;
+  margin-top: 6px;
+}
+
 .field-label {
   display: block;
   margin-bottom: 8px;

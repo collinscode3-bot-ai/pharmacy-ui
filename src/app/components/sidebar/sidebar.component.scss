@@ -101,6 +101,14 @@
   color: #1f2937;
 }
 
+/* Hand icon on hover for logout */
+.utility { cursor: pointer; }
+.utility .icon-hover { display: none; }
+.utility .icon-default { display: inline-flex; }
+.utility:hover .icon-default { display: none; }
+.utility:hover .icon-hover { display: inline-flex; }
+.utility mat-icon { font-size: 15px; width: 15px; height: 15px; }
+
 @media (max-width: 1024px) {
   .app-sidebar {
     width: 214px;
