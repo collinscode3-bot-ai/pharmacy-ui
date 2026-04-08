@@ -1,45 +1,49 @@
 // Centralized API endpoint definitions for the application.
 // Import this object where you need to call backend endpoints.
 
+import { environment } from 'src/environments/environment';
+
+const BASE = (environment && environment.apiBase)
+  ? String(environment.apiBase).replace(/\/+$/,'')
+  : '/pharmacy-1.0';
+
 export const API_ENDPOINTS = {
-  BASE: '/pharmacy-1.0',
+  BASE,
 
   AUTH: {
-    LOGIN: '/pharmacy-1.0/api/auth/login',
-    // LOGOUT: '/api/auth/logout',
-    SIGNUP: '/pharmacy-1.0/api/auth/signup',
-    FORGOT_PASSWORD: '/pharmacy-1.0/api/auth/forgot-password',
-    BY_EMAIL: (email: string) => `/pharmacy-1.0/api/users/by-email?email=${encodeURIComponent(email)}`,
-    // PROFILE: '/api/auth/profile'
+    LOGIN: `${BASE}/api/auth/login`,
+    SIGNUP: `${BASE}/api/auth/signup`,
+    FORGOT_PASSWORD: `${BASE}/api/auth/forgot-password`,
+    BY_EMAIL: (email: string) => `${BASE}/api/users/by-email?email=${encodeURIComponent(email)}`
   },
 
   DASHBOARD: {
-    OVERVIEW: '/api/dashboard/overview',
-    SALES_TRENDS: '/api/dashboard/sales-trends'
+    OVERVIEW: `${BASE}/api/dashboard/overview`,
+    SALES_TRENDS: `${BASE}/api/dashboard/sales-trends`
   },
 
   MEDICINES: {
-    LIST: '/api/medicines',
-    DETAILS: (id: string | number) => `/api/medicines/${id}`,
-    CATEGORIES: '/api/medicines/categories'
+    LIST: `${BASE}/api/medicines`,
+    DETAILS: (id: string | number) => `${BASE}/api/medicines/${id}`,
+    CATEGORIES: `${BASE}/api/medicines/categories`
   },
 
   INVENTORY: {
-    LIST: '/api/inventory',
-    LOW_STOCK: '/api/inventory/low-stock',
-    REORDER: (id: string | number) => `/api/inventory/${id}/reorder`
+    LIST: `${BASE}/api/inventory`,
+    LOW_STOCK: `${BASE}/api/inventory/low-stock`,
+    REORDER: (id: string | number) => `${BASE}/api/inventory/${id}/reorder`
   },
 
   ORDERS: {
-    CREATE: '/api/orders',
-    LIST: '/api/orders',
-    DETAILS: (id: string | number) => `/api/orders/${id}`
+    CREATE: `${BASE}/api/orders`,
+    LIST: `${BASE}/api/orders`,
+    DETAILS: (id: string | number) => `${BASE}/api/orders/${id}`
   },
 
   USERS: {
-    LIST: '/api/users',
-    DETAILS: (id: string | number) => `/api/users/${id}`,
-    UPDATE: (id: string | number) => `/pharmacy-1.0/api/users/${id}`
+    LIST: `${BASE}/api/users`,
+    DETAILS: (id: string | number) => `${BASE}/api/users/${id}`,
+    UPDATE: (id: string | number) => `${BASE}/api/users/${id}`
   }
 } as const;
 
