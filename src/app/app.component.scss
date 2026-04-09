@@ -8,8 +8,19 @@
   margin:0 auto;
 }
 
+.main-content.billing-layout {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 @media (max-width: 1024px) {
   .main-content {
     width:100%;
+  }
+
+  .main-content.billing-layout {
+    width: 100%;
+    padding: 16px;
   }
 }

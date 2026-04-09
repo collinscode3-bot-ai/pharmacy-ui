@@ -20,6 +20,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MedicineCatalogComponent } from './components/medicine-catalog/medicine-catalog.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
+import { MedicinesBillingComponent } from './components/medicines-billing/medicines-billing.component';
 import { PleaseWaitComponent } from './shared/please-wait/please-wait.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
@@ -34,7 +35,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     DashboardComponent,
     PleaseWaitComponent,
     MedicineCatalogComponent,
-    AddProductComponent
+    AddProductComponent,
+    MedicinesBillingComponent
   ],
   imports: [
     BrowserModule,

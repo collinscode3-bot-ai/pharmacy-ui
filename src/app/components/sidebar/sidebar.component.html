@@ -20,7 +20,7 @@
         <mat-icon>local_shipping</mat-icon>
         <span>Suppliers</span>
       </a>
-      <a class="nav-item" href="javascript:void(0)">
+      <a class="nav-item" routerLink="/billing" routerLinkActive="active">
         <mat-icon>receipt_long</mat-icon>
         <span>Billing</span>
       </a>
@@ -38,9 +38,8 @@
       <mat-icon>help</mat-icon>
       <span>Support</span>
     </a>
-    <a class="utility" (click)="logout()" role="button">
-      <mat-icon class="icon-default">logout</mat-icon>
-      <mat-icon class="icon-hover">pan_tool</mat-icon>
+    <a class="utility logout" (click)="logout()" role="button">
+      <mat-icon class="logout-icon">logout</mat-icon>
       <span>Logout</span>
     </a>
   </div>

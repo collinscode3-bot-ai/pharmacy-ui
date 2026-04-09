@@ -3,7 +3,7 @@
 		<app-sidebar></app-sidebar>
 		<div class="main-area">
 			<app-header></app-header>
-			<main class="main-content">
+			<main class="main-content" [class.billing-layout]="isBillingRoute">
 				<router-outlet></router-outlet>
 			</main>
 		</div>

@@ -10,6 +10,7 @@ import { filter } from 'rxjs/operators';
 export class AppComponent {
   title = 'pharmacy-ui';
   isDashboard = false;
+  isBillingRoute = false;
 
   constructor(private router: Router) {
     this.checkRoute(this.router.url);
@@ -23,13 +24,16 @@ export class AppComponent {
     // Public routes: root (login), signup, forgot-password
     if (!url) {
       this.isDashboard = false;
+      this.isBillingRoute = false;
       return;
     }
 
     if (url === '/' || url === '' || url.startsWith('/signup') || url.startsWith('/forgot-password')) {
       this.isDashboard = false;
+      this.isBillingRoute = false;
     } else {
       this.isDashboard = true;
+      this.isBillingRoute = url.startsWith('/billing');
     }
   }
 }

@@ -1,0 +1,148 @@
+<section class="billing-root">
+  <div class="billing-grid">
+    <div class="products-pane">
+      <header class="screen-header">
+        <div>
+          <h1>Medicines Billing</h1>
+        </div>
+        <span class="live-chip">
+          <span class="dot"></span>
+          LIVE INVENTORY SYNC
+        </span>
+      </header>
+
+      <label class="search-box" aria-label="Search products">
+        <mat-icon>qr_code_scanner</mat-icon>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search drug name, brand, or scan barcode..." />
+      </label>
+
+      <div class="product-grid">
+        <article
+          class="product-card"
+          *ngFor="let medicine of visibleMedicines; trackBy: trackByMedicine"
+          [class.style-alert]="medicine.style === 'alert'"
+          [class.style-danger]="medicine.style === 'danger'"
+          [class.is-out]="medicine.stock === 0"
+          (click)="addToOrder(medicine)">
+          <div class="card-top">
+            <div class="eyebrow" [class.red]="medicine.prescriptionOnly">{{ medicine.prescriptionOnly ? 'PRESCRIPTION ONLY' : 'PAIN RELIEF' }}</div>
+            <div class="price">{{ medicine.price | currency:'INR':'symbol':'1.2-2' }}</div>
+          </div>
+
+          <h3>{{ medicine.name }} <span>{{ medicine.dose }}</span></h3>
+          <p class="meta">{{ medicine.packInfo }} - Brand: {{ medicine.brand }}</p>
+
+          <div class="chip-row">
+            <span class="chip">{{ medicine.categoryTag }}</span>
+            <span class="chip muted">{{ medicine.complianceTag }}</span>
+          </div>
+
+          <div class="stock-row" [class.out]="medicine.stock === 0">
+            {{ medicine.stock === 0 ? '0 in stock' : (medicine.stock + ' in stock') }}
+          </div>
+        </article>
+
+        <div class="no-results" *ngIf="filteredMedicines.length === 0">
+          No medicines found for this search.
+        </div>
+      </div>
+    </div>
+
+    <aside class="session-pane">
+      <div class="session-top">
+        <div class="session-head">
+          <h2>Active Session</h2>
+          <button type="button" class="clear-btn" (click)="clearOrder()">Clear Order</button>
+        </div>
+
+        <div class="customer-card">
+          <div class="avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div>
+            <div class="name">{{ customerName }}</div>
+            <div class="meta">{{ sessionLabel }}</div>
+          </div>
+          <button type="button" class="edit-customer" aria-label="Edit customer">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+
+        <div class="order-lines">
+          <article class="order-item" *ngFor="let item of orderItems; trackBy: trackByOrder">
+            <div class="line-icon" [class.warn]="item.prescriptionOnly">
+              <mat-icon>{{ item.icon }}</mat-icon>
+            </div>
+            <div class="line-copy">
+              <div class="title">{{ item.name }} {{ item.dose }}</div>
+              <div class="sub">{{ item.packInfo }} - Unit: {{ item.price | currency:'INR':'symbol':'1.2-2' }}</div>
+            </div>
+            <div class="qty-wrap">
+              <button type="button" (click)="decrement(item)">-</button>
+              <span>{{ item.quantity }}</span>
+              <button type="button" (click)="increment(item)">+</button>
+            </div>
+            <div class="line-amount">{{ item.price * item.quantity | currency:'INR':'symbol':'1.2-2' }}</div>
+          </article>
+
+          <div class="empty-order" *ngIf="orderItems.length === 0">
+            No medicines in this order.
+          </div>
+        </div>
+      </div>
+
+      <div class="session-bottom">
+        <div class="totals">
+          <div class="row">
+            <span>Subtotal</span>
+            <strong>{{ subtotal | currency:'INR':'symbol':'1.2-2' }}</strong>
+          </div>
+          <div class="row">
+            <span>Tax (VAT 5%)</span>
+            <strong>{{ taxAmount | currency:'INR':'symbol':'1.2-2' }}</strong>
+          </div>
+          <div class="row">
+            <span>Discount</span>
+            <span class="discount-field">
+              <span class="currency">₹</span>
+              <input type="number" min="0" step="0.01" [(ngModel)]="customDiscount" />
+            </span>
+          </div>
+          <div class="row">
+            <span>Applied Discount</span>
+            <strong class="negative">-{{ bulkDiscount | currency:'INR':'symbol':'1.2-2' }}</strong>
+          </div>
+        </div>
+
+        <div class="grand-total">
+          <div>
+            <div class="label">GRAND TOTAL</div>
+            <div class="value">{{ grandTotal | currency:'INR':'symbol':'1.2-2' }}</div>
+          </div>
+        </div>
+
+        <div class="payment-split">
+          <label>
+            <span>CASH AMOUNT</span>
+            <input type="number" min="0" step="0.01" [(ngModel)]="payment.cash" />
+          </label>
+          <label>
+            <span>CARD AMOUNT</span>
+            <input type="number" min="0" step="0.01" [(ngModel)]="payment.card" />
+          </label>
+          <label>
+            <span>UPI AMOUNT</span>
+            <input type="number" min="0" step="0.01" [(ngModel)]="payment.upi" />
+          </label>
+        </div>
+
+        <button type="button" class="complete-btn" [disabled]="!canCompleteSale" (click)="submitSale()">
+          <mat-icon>check_circle</mat-icon>
+          Complete Sale
+        </button>
+
+        <p class="invoice-note">F12 TO FAST-PRINT INVOICE</p>
+      </div>
+    </aside>
+  </div>
+</section>
