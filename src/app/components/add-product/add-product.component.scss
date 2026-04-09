@@ -1,0 +1,272 @@
+:host {
+	display: block;
+	font-family: var(--app-font-stack);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.add-product-root {
+	padding: 14px 4px 10px;
+	color: #111827;
+}
+
+.breadcrumb {
+	font-size: 0.72rem;
+	color: #64748b;
+	margin-bottom: 6px;
+}
+
+.breadcrumb .sep {
+	margin: 0 6px;
+	color: #94a3b8;
+}
+
+h1 {
+	margin: 0;
+	font-size: 2rem;
+	line-height: 1.08;
+	color: #0f172a;
+	letter-spacing: -0.01em;
+}
+
+.sub {
+	margin: 8px 0 16px;
+	color: #475569;
+	font-size: 0.98rem;
+}
+
+.product-card {
+	background: #ffffff;
+	border: 1px solid #e9edf5;
+	border-radius: 14px;
+	box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+	padding: 22px 22px 14px;
+}
+
+.form-block {
+	margin-bottom: 18px;
+}
+
+.form-block h3 {
+	margin: 0 0 14px;
+	font-size: 1.02rem;
+	color: #0f172a;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.panel-icon {
+	width: 22px;
+	height: 22px;
+	border-radius: 6px;
+	display: grid;
+	place-items: center;
+}
+
+.panel-icon .mat-icon {
+	width: 14px;
+	height: 14px;
+	font-size: 14px;
+}
+
+.panel-icon.blue {
+	color: #1d4ed8;
+	background: #e8efff;
+}
+
+.panel-icon.mint {
+	color: #0f766e;
+	background: #d9f6ef;
+}
+
+.panel-icon.rose {
+	color: #991b1b;
+	background: #ffe8e6;
+}
+
+.row {
+	display: grid;
+	gap: 16px;
+	margin-bottom: 14px;
+}
+
+.row:last-child {
+	margin-bottom: 0;
+}
+
+.row.two-col {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.row.three-col {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.field-label {
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #334155;
+}
+
+input,
+select {
+	height: 42px;
+	border-radius: 8px;
+	border: 1px solid #e5eaf3;
+	background: #f3f6fb;
+	color: #0f172a;
+	padding: 0 12px;
+	font: inherit;
+}
+
+input::placeholder {
+	color: #94a3b8;
+}
+
+select {
+	appearance: none;
+	background-image: linear-gradient(45deg, transparent 50%, #64748b 50%), linear-gradient(135deg, #64748b 50%, transparent 50%);
+	background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 13px) calc(50% - 2px);
+	background-size: 5px 5px, 5px 5px;
+	background-repeat: no-repeat;
+}
+
+.divider {
+	height: 1px;
+	background: #edf2f8;
+	margin-top: 8px;
+}
+
+.form-actions {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 14px;
+	padding-top: 16px;
+}
+
+.cancel-btn {
+	border: none;
+	background: transparent;
+	color: #1f2937;
+	font-weight: 600;
+	padding: 10px 6px;
+	cursor: pointer;
+}
+
+.save-btn {
+	border: 0;
+	background: #0d47a1;
+	color: #ffffff;
+	height: 40px;
+	min-width: 128px;
+	border-radius: 8px;
+	font-weight: 600;
+	padding: 0 18px;
+	cursor: pointer;
+	box-shadow: 0 6px 14px rgba(13, 71, 161, 0.22);
+}
+
+.save-btn:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+.save-success {
+	color: #166534;
+	background: rgba(16, 185, 129, 0.06);
+	border: 1px solid rgba(16, 185, 129, 0.12);
+	padding: 8px 12px;
+	border-radius: 8px;
+	text-align: left;
+	margin-top: 10px;
+	font-weight: 600;
+	font-size: 0.92rem;
+}
+
+.insight-cards {
+	margin-top: 14px;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.insight {
+	border-radius: 12px;
+	border: 1px solid #e6edf6;
+	padding: 12px;
+}
+
+.insight h4 {
+	margin: 0 0 8px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: #1e3a8a;
+}
+
+.insight h4 .mat-icon {
+	width: 15px;
+	height: 15px;
+	font-size: 15px;
+}
+
+.insight p {
+	margin: 0;
+	color: #334155;
+	font-size: 0.82rem;
+	line-height: 1.4;
+}
+
+.insight.tip {
+	background: #edf4ff;
+}
+
+.insight.safety {
+	background: #eaf8f3;
+}
+
+.insight.latest {
+	background: #f6f8fb;
+}
+
+.insight.latest small {
+	color: #64748b;
+}
+
+@media (max-width: 1000px) {
+	.row.two-col,
+	.row.three-col,
+	.insight-cards {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* required indicator and mat-error styles consistent with other screens */
+.required-indicator {
+	color: #b91c1c;
+	margin-left: 6px;
+	font-weight: 700;
+	font-size: 0.95rem;
+	line-height: 1;
+}
+
+.mat-mdc-form-field .mat-error, .mat-error {
+	color: #b91c1c;
+	font-weight: 400;
+	font-size: 0.88rem;
+	margin-top: 6px;
+}

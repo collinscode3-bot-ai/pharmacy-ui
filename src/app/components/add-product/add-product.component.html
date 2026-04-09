@@ -1,0 +1,134 @@
+<div class="add-product-root container">
+  <h1>{{ pageTitle }}</h1>
+  <p class="sub">Register a new pharmaceutical product into the clinical database.</p>
+
+  <form class="add-form product-card" #productForm="ngForm">
+    <section class="form-block">
+      <h3><span class="panel-icon blue"><mat-icon>verified</mat-icon></span> Basic Identification</h3>
+      <div class="row two-col">
+        <label class="field">
+          <span class="field-label">Product Name <span class="required-indicator" aria-hidden="true">*</span></span>
+          <input type="text" required aria-required="true" placeholder="e.g., Amoxicillin 500mg" [(ngModel)]="product.name" name="name" #nameModel="ngModel" />
+          <div class="mat-error" *ngIf="nameModel.invalid && (nameModel.touched || submitted)">Product name is required.</div>
+        </label>
+        <label class="field">
+          <span class="field-label">Generic Name / Molecule</span>
+          <input type="text" placeholder="e.g., Amoxicillin Trihydrate" [(ngModel)]="product.genericName" name="genericName" />
+        </label>
+      </div>
+      <div class="row two-col">
+        <label class="field">
+          <span class="field-label">Product Type <span class="required-indicator" aria-hidden="true">*</span></span>
+          <select required aria-required="true" [(ngModel)]="product.category" name="category" #categoryModel="ngModel">
+            <option value="">Select Product Type</option>
+            <option value="Medicine">Medicine</option>
+            <option value="Surgical">Surgicals</option>
+          </select>
+          <div class="mat-error" *ngIf="categoryModel.invalid && (categoryModel.touched || submitted)">Product type is required.</div>
+        </label>
+        <label class="field">
+          <span class="field-label">Manufacturer / Brand</span>
+          <input type="text" placeholder="e.g., GlaxoSmithKline" [(ngModel)]="product.manufacturer" name="manufacturer" />
+        </label>
+      </div>
+      <div class="row two-col">
+        <label class="field">
+          <span class="field-label">Batch Number <span class="required-indicator" aria-hidden="true">*</span></span>
+          <input type="text" required aria-required="true" placeholder="e.g., BATCH-2026-01" [(ngModel)]="product.batch_number" name="batch_number" #batchNumberModel="ngModel" />
+          <div class="mat-error" *ngIf="batchNumberModel.invalid && (batchNumberModel.touched || submitted)">Batch number is required.</div>
+        </label>
+        <label class="field">
+          <span class="field-label">Location</span>
+          <input type="text" placeholder="e.g., Rack A-12" [(ngModel)]="product.location" name="location" />
+        </label>
+      </div>
+      <div class="row two-col">
+        <label class="field">
+          <span class="field-label">Expiration Date</span>
+          <input type="date" [(ngModel)]="product.expiration_date" name="expiration_date" />
+        </label>
+        <label class="field">
+          <span class="field-label">Reorder Level</span>
+          <input type="text" placeholder="e.g., 50" [(ngModel)]="product.reorder_level" name="reorder_level" />
+        </label>
+      </div>
+    </section>
+
+    <section class="form-block">
+      <h3><span class="panel-icon mint"><mat-icon>inventory</mat-icon></span> Specification & Packaging</h3>
+      <div class="row two-col">
+        <label class="field">
+          <span class="field-label">Strength <span class="required-indicator" aria-hidden="true">*</span></span>
+          <input type="text" required aria-required="true" placeholder="e.g., 500mg" [(ngModel)]="product.strength" name="strength" #strengthModel="ngModel" />
+          <div class="mat-error" *ngIf="strengthModel.invalid && (strengthModel.touched || submitted)">Strength is required.</div>
+        </label>
+        <label class="field">
+          <span class="field-label">Unit Type <span class="required-indicator" aria-hidden="true">*</span></span>
+          <select required aria-required="true" [(ngModel)]="product.unitType" name="unitType" #unitTypeModel="ngModel">
+            <option value="">Select Unit Type</option>
+            <option value="Tablet">Tablet</option>
+            <option value="Capsule">Capsule</option>
+            <option value="Syrup">Syrup</option>
+          </select>
+          <div class="mat-error" *ngIf="unitTypeModel.invalid && (unitTypeModel.touched || submitted)">Unit type is required.</div>
+        </label>
+      </div>
+    </section>
+
+    <section class="form-block">
+      <h3><span class="panel-icon rose"><mat-icon>payments</mat-icon></span> Pricing & Regulatory</h3>
+      <div class="row three-col">
+        <label class="field">
+          <span class="field-label">Purchasing Unit Price <span class="required-indicator" aria-hidden="true">*</span></span>
+          <input type="text" required aria-required="true" placeholder="INR 0.00" [(ngModel)]="product.purchasing_unit_price" name="purchasing_unit_price" #purchasingUnitPriceModel="ngModel" />
+          <div class="mat-error" *ngIf="purchasingUnitPriceModel.invalid && (purchasingUnitPriceModel.touched || submitted)">Purchasing unit price is required.</div>
+        </label>
+        <label class="field">
+          <span class="field-label">Selling Unit Price <span class="required-indicator" aria-hidden="true">*</span></span>
+          <input type="text" required aria-required="true" placeholder="INR 0.00" [(ngModel)]="product.selling_unit_price" name="selling_unit_price" #sellingUnitPriceModel="ngModel" />
+          <div class="mat-error" *ngIf="sellingUnitPriceModel.invalid && (sellingUnitPriceModel.touched || submitted)">Selling unit price is required.</div>
+        </label>
+        <label class="field">
+          <span class="field-label">Quantity <span class="required-indicator" aria-hidden="true">*</span></span>
+          <input type="text" required aria-required="true" placeholder="e.g., 100" [(ngModel)]="product.quantity_on_hand" name="quantity" #quantityModel="ngModel" />
+          <div class="mat-error" *ngIf="quantityModel.invalid && (quantityModel.touched || submitted)">Quantity is required.</div>
+        </label>
+      </div>
+      <div class="row two-col">
+        <label class="field">
+          <span class="field-label">GST Tax <span class="required-indicator" aria-hidden="true">*</span></span>
+          <select required aria-required="true" [(ngModel)]="product.gstTaxId" name="gstTaxId" #gstTaxIdModel="ngModel">
+            <option value="">Select GST Tax</option>
+            <option [ngValue]="1">5%</option>
+            <option [ngValue]="2">12%</option>
+            <option [ngValue]="6">18%</option>
+          </select>
+          <div class="mat-error" *ngIf="gstTaxIdModel.invalid && (gstTaxIdModel.touched || submitted)">GST tax is required.</div>
+        </label>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+    <div class="save-success" *ngIf="saveSuccess">{{ saveSuccess }}</div>
+    <div class="mat-error" *ngIf="saveError">{{ saveError }}</div>
+    <div class="form-actions">
+      <button type="button" class="cancel-btn" (click)="cancel()">Cancel</button>
+      <button type="button" class="save-btn" [disabled]="saving || !!saveSuccess" (click)="save(productForm)">{{ saveButtonText }}</button>
+    </div>
+  </form>
+
+  <section class="insight-cards">
+    <article class="insight tip">
+      <h4><mat-icon>info</mat-icon> Quick Tip</h4>
+      <p>Generic names help pharmacists identify alternatives for out-of-stock items.</p>
+    </article>
+    <article class="insight safety">
+      <h4><mat-icon>security</mat-icon> Drug Safety</h4>
+      <p>All entries are audited for HIPAA compliance and therapeutic accuracy.</p>
+    </article>
+    <article class="insight latest">
+      <h4><mat-icon>history</mat-icon> Last Added</h4>
+      <p><strong>Paracetamol 650mg</strong><br><small>2 minutes ago by Dr. Sarah</small></p>
+    </article>
+  </section>
+</div>

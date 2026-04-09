@@ -19,6 +19,17 @@ export class AppComponent {
   }
 
   private checkRoute(url: string) {
-    this.isDashboard = url.startsWith('/dashboard');
+    // Show the app shell for authenticated/inside-app routes.
+    // Public routes: root (login), signup, forgot-password
+    if (!url) {
+      this.isDashboard = false;
+      return;
+    }
+
+    if (url === '/' || url === '' || url.startsWith('/signup') || url.startsWith('/forgot-password')) {
+      this.isDashboard = false;
+    } else {
+      this.isDashboard = true;
+    }
   }
 }

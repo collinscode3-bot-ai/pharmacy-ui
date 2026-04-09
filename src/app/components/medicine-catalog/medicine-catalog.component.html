@@ -1,0 +1,93 @@
+<div class="catalog-root container">
+  <header class="catalog-header">
+    <div class="header-left">
+      <h2>Medicine Catalog</h2>
+      <p class="sub">Comprehensive database of approved pharmaceutical agents, pricing, and stock classification.</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button color="primary"><mat-icon>file_download</mat-icon> Export CSV</button>
+      <button mat-flat-button color="primary" class="add-btn" [routerLink]="['/inventory/add-product']">+ Add New Product</button>
+    </div>
+  </header>
+
+  <section class="summary-cards">
+    <div class="card stat">
+      <div class="label">TOTAL SKU</div>
+      <div class="value">
+        <ng-container *ngIf="!cardsLoading; else cardsLoadingTpl">{{ totalSku | number }}</ng-container>
+      </div>
+    </div>
+    <div class="card stat">
+      <div class="label">LOW STOCK</div>
+      <div class="value low">
+        <ng-container *ngIf="!cardsLoading; else cardsLoadingTpl">{{ lowStockCount }} Items</ng-container>
+      </div>
+    </div>
+    <div class="card stat">
+      <div class="label">OUT OF STOCK</div>
+      <div class="value out">
+        <ng-container *ngIf="!cardsLoading; else cardsLoadingTpl">{{ outOfStock }} Items</ng-container>
+      </div>
+    </div>
+    <div class="card stat">
+      <div class="label">CATALOG VALUE</div>
+      <div class="value value-currency">
+        <ng-container *ngIf="!cardsLoading; else cardsLoadingTpl">₹ {{ catalogValue | number:'1.2-2' }}</ng-container>
+      </div>
+    </div>
+
+    <ng-template #cardsLoadingTpl>
+      <app-please-wait message="Please wait..."></app-please-wait>
+    </ng-template>
+  </section>
+
+  <section class="catalog-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Generic Name</th>
+          <th>Product Type</th>
+          <th>Price (Unit)</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="loading">
+          <td colspan="6"><app-please-wait message="Loading medicines..."></app-please-wait></td>
+        </tr>
+        <tr *ngFor="let m of medicines">
+          <td class="med-name">
+            <div class="name">{{ m.name }}</div>
+            <div class="form">{{ m.form }}</div>
+          </td>
+          <td class="generic">{{ m.genericName }}</td>
+          <td class="category-cell"><span class="cat">{{ m.productType }}</span></td>
+          <td class="price">{{ m.price | currency:'INR':'symbol':'1.2-2' }}</td>
+          <td class="status-cell">
+            <div class="status">
+              <span class="dot" [ngClass]="{'green': m.status === 'in_stock', 'amber': m.status === 'low_stock', 'red': m.status === 'out_of_stock'}"></span>
+              <span class="label">{{ m.status === 'in_stock' ? 'In Stock' : (m.status === 'low_stock' ? 'Low Stock (5)' : 'Out of Stock') }}</span>
+            </div>
+          </td>
+          <td class="actions-cell">
+            <div class="actions">
+              <button mat-icon-button aria-label="Edit" class="action-btn edit" (click)="openEdit(m)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button aria-label="Delete" class="action-btn delete"><mat-icon>delete</mat-icon></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="table-footer">
+      Showing {{ startItem }} to {{ endItem }} of {{ totalElements }} entries
+    </div>
+    <div class="catalog-pagination" aria-label="Pagination">
+      <a class="prev-next" [class.disabled]="page===0" href="#" (click)="$event.preventDefault(); prevPage()">Prev</a>
+      <a *ngFor="let p of visiblePageNumbers" href="#" (click)="$event.preventDefault(); goToPage(p)" [class.active]="p===page">{{ p + 1 }}</a>
+      <a class="prev-next" [class.disabled]="page>=totalPages-1" href="#" (click)="$event.preventDefault(); nextPage()">Next</a>
+    </div>
+  </section>
+</div>

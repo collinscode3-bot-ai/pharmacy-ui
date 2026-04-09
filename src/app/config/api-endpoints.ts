@@ -29,6 +29,7 @@ export const API_ENDPOINTS = {
   MEDICINES: {
     LIST: `${BASE}/api/medicines`,
     DETAILS: (id: string | number) => `${BASE}/api/medicines/${id}`,
+    CARDS: `${BASE}/api/medicines/cards`,
     CATEGORIES: `${BASE}/api/medicines/categories`
   },
 

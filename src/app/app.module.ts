@@ -11,12 +11,15 @@ import { MaterialModule } from './material.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MedicineCatalogComponent } from './components/medicine-catalog/medicine-catalog.component';
+import { AddProductComponent } from './components/add-product/add-product.component';
 import { PleaseWaitComponent } from './shared/please-wait/please-wait.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
@@ -28,8 +31,10 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     ForgotPasswordComponent
     ,SidebarComponent,
     HeaderComponent,
-    DashboardComponent
-    ,PleaseWaitComponent
+    DashboardComponent,
+    PleaseWaitComponent,
+    MedicineCatalogComponent,
+    AddProductComponent
   ],
   imports: [
     BrowserModule,
@@ -41,6 +46,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule
+    ,RouterModule
   ],
   providers: [
     {
