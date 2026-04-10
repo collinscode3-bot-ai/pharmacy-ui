@@ -13,36 +13,44 @@
 
       <label class="search-box" aria-label="Search products">
         <mat-icon>qr_code_scanner</mat-icon>
-        <input type="text" [(ngModel)]="searchTerm" placeholder="Search drug name, brand, or scan barcode..." />
+        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" placeholder="Search drug name, brand, or scan barcode..." />
       </label>
 
+      <div class="products-error" *ngIf="loadError">{{ loadError }}</div>
+
       <div class="product-grid">
-        <article
-          class="product-card"
-          *ngFor="let medicine of visibleMedicines; trackBy: trackByMedicine"
-          [class.style-alert]="medicine.style === 'alert'"
-          [class.style-danger]="medicine.style === 'danger'"
-          [class.is-out]="medicine.stock === 0"
-          (click)="addToOrder(medicine)">
-          <div class="card-top">
-            <div class="eyebrow" [class.red]="medicine.prescriptionOnly">{{ medicine.prescriptionOnly ? 'PRESCRIPTION ONLY' : 'PAIN RELIEF' }}</div>
-            <div class="price">{{ medicine.price | currency:'INR':'symbol':'1.2-2' }}</div>
-          </div>
+        <div class="grid-loader" *ngIf="isLoadingMedicines">
+          <app-please-wait [message]="medicinesLoadingMessage"></app-please-wait>
+        </div>
 
-          <h3>{{ medicine.name }} <span>{{ medicine.dose }}</span></h3>
-          <p class="meta">{{ medicine.packInfo }} - Brand: {{ medicine.brand }}</p>
+        <ng-container *ngIf="!isLoadingMedicines">
+          <article
+            class="product-card"
+            *ngFor="let medicine of visibleMedicines; trackBy: trackByMedicine"
+            [class.style-alert]="medicine.style === 'alert'"
+            [class.style-danger]="medicine.style === 'danger'"
+            [class.is-out]="medicine.stock === 0"
+            (click)="addToOrder(medicine)">
+            <div class="card-top">
+              <div class="eyebrow" [class.red]="medicine.prescriptionOnly">{{ medicine.prescriptionOnly ? 'PRESCRIPTION ONLY' : 'PAIN RELIEF' }}</div>
+              <div class="price">{{ medicine.price | currency:'INR':'symbol':'1.2-2' }}</div>
+            </div>
 
-          <div class="chip-row">
-            <span class="chip">{{ medicine.categoryTag }}</span>
-            <span class="chip muted">{{ medicine.complianceTag }}</span>
-          </div>
+            <h3>{{ medicine.name }} <span>{{ medicine.dose }}</span></h3>
+            <p class="meta">{{ medicine.packInfo }} - Brand: {{ medicine.brand }}</p>
 
-          <div class="stock-row" [class.out]="medicine.stock === 0">
-            {{ medicine.stock === 0 ? '0 in stock' : (medicine.stock + ' in stock') }}
-          </div>
-        </article>
+            <div class="chip-row">
+              <span class="chip">{{ medicine.categoryTag }}</span>
+              <span class="chip muted">{{ medicine.complianceTag }}</span>
+            </div>
 
-        <div class="no-results" *ngIf="filteredMedicines.length === 0">
+            <div class="stock-row" [class.out]="medicine.stock === 0">
+              {{ medicine.stock === 0 ? '0 in stock' : (medicine.stock + ' in stock') }}
+            </div>
+          </article>
+        </ng-container>
+
+        <div class="no-results" *ngIf="!isLoadingMedicines && filteredMedicines.length === 0">
           No medicines found for this search.
         </div>
       </div>
@@ -61,9 +69,9 @@
           </div>
           <div>
             <div class="name">{{ customerName }}</div>
-            <div class="meta">{{ sessionLabel }}</div>
+            <div class="meta">{{ customerPhoneLabel }}</div>
           </div>
-          <button type="button" class="edit-customer" aria-label="Edit customer">
+          <button type="button" class="edit-customer" aria-label="Edit customer" (click)="openCustomerEditModal()">
             <mat-icon>edit</mat-icon>
           </button>
         </div>
@@ -75,7 +83,7 @@
             </div>
             <div class="line-copy">
               <div class="title">{{ item.name }} {{ item.dose }}</div>
-              <div class="sub">{{ item.packInfo }} - Unit: {{ item.price | currency:'INR':'symbol':'1.2-2' }}</div>
+              <div class="sub">Unit: {{ item.price | currency:'INR':'symbol':'1.2-2' }}</div>
             </div>
             <div class="qty-wrap">
               <button type="button" (click)="decrement(item)">-</button>
@@ -97,21 +105,27 @@
             <span>Subtotal</span>
             <strong>{{ subtotal | currency:'INR':'symbol':'1.2-2' }}</strong>
           </div>
-          <div class="row">
-            <span>Tax (VAT 5%)</span>
-            <strong>{{ taxAmount | currency:'INR':'symbol':'1.2-2' }}</strong>
-          </div>
-          <div class="row">
+            <div class="row">
             <span>Discount</span>
             <span class="discount-field">
               <span class="currency">₹</span>
-              <input type="number" min="0" step="0.01" [(ngModel)]="customDiscount" />
+              <input type="number" min="0" step="0.01" [(ngModel)]="customDiscount" (blur)="discountTouched = true" />
             </span>
           </div>
+          <div class="row error-row" *ngIf="!isDiscountValid">
+            <div></div>
+            <div class="mat-error">Maximum allowed discount is {{ maxDiscountAllowed | currency:'INR':'symbol':'1.2-2' }}</div>
+          </div>
+          <div class="row">
+            <span>GST Amount</span>
+            <strong>{{ gstAmount | currency:'INR':'symbol':'1.2-2' }}</strong>
+          </div>
+          <!--
           <div class="row">
             <span>Applied Discount</span>
             <strong class="negative">-{{ bulkDiscount | currency:'INR':'symbol':'1.2-2' }}</strong>
           </div>
+          -->
         </div>
 
         <div class="grand-total">
@@ -136,13 +150,49 @@
           </label>
         </div>
 
-        <button type="button" class="complete-btn" [disabled]="!canCompleteSale" (click)="submitSale()">
-          <mat-icon>check_circle</mat-icon>
-          Complete Sale
+        <button type="button" class="complete-btn" [disabled]="!canCompleteSale || !isDiscountValid" (click)="submitSale()">
+          <ng-container *ngIf="!isCompletingSale; else completingSaleTpl">
+            <mat-icon>check_circle</mat-icon>
+            Complete Sale
+          </ng-container>
         </button>
 
-        <p class="invoice-note">F12 TO FAST-PRINT INVOICE</p>
+        <ng-template #completingSaleTpl>
+          <mat-progress-spinner mode="indeterminate" diameter="18" strokeWidth="3"></mat-progress-spinner>
+          Please Wait...
+        </ng-template>
+
+        <app-please-wait *ngIf="isCompletingSale" message="Please wait... completing sale."></app-please-wait>
+        <p class="status-msg status-error" *ngIf="hasOrderItemWithoutInventory && !isCompletingSale">One or more items are missing inventory mapping. Complete Sale may fail until inventory IDs are available.</p>
+        <p class="status-msg status-error" *ngIf="saleError">{{ saleError }}</p>
+        <p class="status-msg status-success" *ngIf="saleSuccess">{{ saleSuccess }}</p>
+        <button type="button" class="download-invoice-btn" *ngIf="hasInvoiceDocument && !isCompletingSale" (click)="downloadInvoice()">
+          <mat-icon>download</mat-icon>
+          Download Invoice PDF
+        </button>
+
+        <!-- <p class="invoice-note">F12 TO FAST-PRINT INVOICE</p> -->
       </div>
     </aside>
+  </div>
+
+  <div class="customer-modal-backdrop" *ngIf="isCustomerModalOpen" (click)="closeCustomerEditModal()">
+    <div class="customer-modal" (click)="$event.stopPropagation()">
+      <h3>Edit Customer Details</h3>
+      <label>
+        <span>Customer Name</span>
+        <input type="text" [(ngModel)]="editCustomerName" (blur)="editCustomerNameTouched = true" placeholder="Walk-in Customer" />
+        <div class="mat-error" *ngIf="editCustomerNameTouched && !isCustomerNameValid">Customer name is required.</div>
+      </label>
+      <label>
+        <span>Phone No</span>
+        <input type="tel" [(ngModel)]="editCustomerPhone" (blur)="editCustomerPhoneTouched = true" placeholder="Enter phone no." />
+        <div class="mat-error" *ngIf="editCustomerPhoneTouched && !isCustomerPhoneValid">Phone number must be 10 digits.</div>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="secondary" (click)="closeCustomerEditModal()">Cancel</button>
+        <button type="button" class="primary" [disabled]="!isCustomerNameValid || !isCustomerPhoneValid" (click)="saveCustomerDetails()">Save</button>
+      </div>
+    </div>
   </div>
 </section>

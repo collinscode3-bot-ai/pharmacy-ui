@@ -204,14 +204,37 @@ h3 {
   border: 1px solid #ebf0f8;
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  align-items: end;
+  align-items: stretch;
   gap: 4px;
   padding: 10px;
 }
 
+.chart-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
 .bar {
+  width: 100%;
   background: linear-gradient(180deg, #2258c7, #19469b);
   border-radius: 6px 6px 2px 2px;
+}
+
+.bar-label {
+  margin-top: 6px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
 }
 
 .activity-panel ul {

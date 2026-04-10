@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'material-icons/iconfont/material-icons.css';
 
 :root {
   --app-font-stack: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
@@ -22,6 +23,13 @@ html, body {
 .mat-mdc-menu-item,
 .mat-mdc-option {
   font-family: var(--app-font-stack) !important;
+}
+
+/* Keep ligature icons on the dedicated Material Icons font. */
+.mat-icon,
+.material-icons,
+.mat-ligature-font {
+	font-family: 'Material Icons' !important;
 }
 
 /* Global typography reduction by ~0.5pt across screens */

@@ -29,6 +29,7 @@ export const API_ENDPOINTS = {
   MEDICINES: {
     LIST: `${BASE}/api/medicines`,
     DETAILS: (id: string | number) => `${BASE}/api/medicines/${id}`,
+    ALPHA: `${BASE}/api/medicines/alpha`,
     CARDS: `${BASE}/api/medicines/cards`,
     CATEGORIES: `${BASE}/api/medicines/categories`
   },
@@ -43,6 +44,10 @@ export const API_ENDPOINTS = {
     CREATE: `${BASE}/api/orders`,
     LIST: `${BASE}/api/orders`,
     DETAILS: (id: string | number) => `${BASE}/api/orders/${id}`
+  },
+
+  SALES: {
+    CREATE: `${BASE}/api/sales`
   },
 
   USERS: {

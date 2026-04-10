@@ -97,11 +97,26 @@
   color: #6b7280;
 }
 
+.products-error {
+  margin-top: 10px;
+  color: #b42318;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 .product-grid {
   margin-top: 28px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
+}
+
+.grid-loader {
+  grid-column: 1 / -1;
+  border-radius: 12px;
+  border: 1px solid #dde4ef;
+  background: #f7f9fc;
+  padding: 16px;
 }
 
 .product-card {
@@ -314,6 +329,109 @@
   color: #111827;
 }
 
+.customer-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+.customer-modal {
+  width: min(420px, calc(100vw - 32px));
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #d4dbe8;
+  box-shadow: 0 24px 42px rgba(15, 23, 42, 0.25);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.customer-modal h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.customer-modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.customer-modal label span {
+  font-size: 0.72rem;
+  color: #334155;
+  font-weight: 700;
+}
+
+.customer-modal input {
+  border: 1px solid #c5cfde;
+  border-radius: 6px;
+  height: 34px;
+  background: #f4f6fa;
+  padding: 0 10px;
+  color: #111827;
+  font-size: 0.88rem;
+}
+
+.modal-actions {
+  margin-top: 4px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-actions button {
+  border: 0;
+  border-radius: 8px;
+  height: 34px;
+  padding: 0 14px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-actions .secondary {
+  background: #e8edf6;
+  color: #1f2937;
+}
+
+.modal-actions .primary {
+  background: #10439a;
+  color: #ffffff;
+}
+
+/* Use consistent mat-error style as other components */
+.mat-mdc-form-field .mat-error, .mat-error {
+  color: #b91c1c;
+  font-weight: 400;
+  font-size: 0.88rem;
+  margin-top: 6px;
+}
+
+/* Increase visibility of unit price in order lines */
+.line-copy .sub {
+  margin-top: 8px;
+  padding-left: 6px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f2f84;
+  display: block;
+}
+
+/* Ensure discount error spans the full width and aligns under the inputs */
+.totals .error-row .mat-error {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  margin-left: 0;
+}
+
 .order-lines {
   margin-top: 14px;
   display: flex;
@@ -360,7 +478,7 @@
 }
 
 .line-copy .sub {
-  margin-top: 2px;
+  margin-top: 8px;
   font-size: 0.72rem;
   color: #4b5563;
 }
@@ -415,13 +533,13 @@
 .totals {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .totals .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
   color: #1f2937;
   font-size: 0.9rem;
 }
@@ -528,12 +646,53 @@
   cursor: pointer;
 }
 
+.complete-btn mat-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: #ffffff;
+}
+
 .complete-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 .complete-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.status-msg {
+  margin: 8px 0 0;
+  font-size: 0.79rem;
+  font-weight: 700;
+}
+
+.status-error {
+  color: #9f1239;
+}
+
+.status-success {
+  color: #086a47;
+}
+
+.download-invoice-btn {
+  margin-top: 10px;
+  width: 100%;
+  height: 38px;
+  border: 1px solid #c9d6ec;
+  border-radius: 8px;
+  background: #eef3fb;
+  color: #1f3f86;
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.download-invoice-btn mat-icon {
   font-size: 18px;
   width: 18px;
   height: 18px;
@@ -575,6 +734,7 @@
   .payment-split {
     grid-template-columns: 1fr;
   }
+
 }
 
 @media (max-width: 640px) {

@@ -18,7 +18,7 @@
       </div>
       <div class="value">
         <ng-container *ngIf="!loading; else loadingTpl">
-          <span *ngIf="dailySalesSummary; else noData">₹{{ dailySalesSummary.total | number:'1.2-2' }} <small *ngIf="dailySalesSummary.change">{{ dailySalesSummary.change }}</small></span>
+          <span *ngIf="dailySalesSummary; else noData">₹{{ dailySalesAmount | number:'1.2-2' }} <small *ngIf="dailySalesSummary.change">{{ dailySalesSummary.change }}</small></span>
         </ng-container>
         <ng-template #noData>—</ng-template>
       </div>
@@ -32,7 +32,7 @@
       </div>
       <div class="value">
         <ng-container *ngIf="!loading; else loadingTpl">
-          <span>{{ lowStockAlerts.length }} <small class="down" *ngIf="lowStockAlerts.length && dailySalesSummary?.lowStockChange">{{ dailySalesSummary.lowStockChange }}</small></span>
+          <span>{{ lowStockAlertCount }} <small class="down" *ngIf="lowStockAlertCount && dailySalesSummary?.lowStockChange">{{ dailySalesSummary?.lowStockChange }}</small></span>
         </ng-container>
       </div>
       <p>Needs immediate replenishment</p>
@@ -45,7 +45,7 @@
       </div>
       <div class="value">
         <ng-container *ngIf="!loading; else loadingTpl">
-          <span>{{ expiringItems.length }} <small class="pill">Within 30 Days</small></span>
+          <span>{{ expiringItemCount }} <small class="pill">Within 30 Days</small></span>
         </ng-container>
       </div>
       <p>Inventory risk flagged</p>
@@ -68,8 +68,13 @@
 
       <div class="chart-placeholder" aria-label="Sales chart preview">
         <ng-container *ngIf="!loading; else chartLoading">
-          <ng-container *ngIf="salesHeights.length; else noChart">
-            <div class="bar" *ngFor="let h of salesHeights" [style.height.%]="h"></div>
+          <ng-container *ngIf="salesTrendBars.length; else noChart">
+            <div class="chart-col" *ngFor="let point of salesTrendBars">
+              <div class="bar-wrap">
+                <div class="bar" [style.height.%]="point.height" [attr.aria-label]="point.label + ': ' + point.value"></div>
+              </div>
+              <div class="bar-label">{{ point.label }}</div>
+            </div>
           </ng-container>
         </ng-container>
         <ng-template #chartLoading>
