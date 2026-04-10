@@ -33,24 +33,29 @@
       </div>
       <div class="row two-col">
         <label class="field">
-          <span class="field-label">Batch Number <span class="required-indicator" aria-hidden="true">*</span></span>
-          <input type="text" required aria-required="true" placeholder="e.g., BATCH-2026-01" [(ngModel)]="product.batch_number" name="batch_number" #batchNumberModel="ngModel" />
-          <div class="mat-error" *ngIf="batchNumberModel.invalid && (batchNumberModel.touched || submitted)">Batch number is required.</div>
-        </label>
-        <label class="field">
-          <span class="field-label">Location</span>
-          <input type="text" placeholder="e.g., Rack A-12" [(ngModel)]="product.location" name="location" />
-        </label>
-      </div>
-      <div class="row two-col">
-        <label class="field">
-          <span class="field-label">Expiration Date</span>
-          <input type="date" [(ngModel)]="product.expiration_date" name="expiration_date" />
-        </label>
-        <label class="field">
           <span class="field-label">Reorder Level</span>
           <input type="text" placeholder="e.g., 50" [(ngModel)]="product.reorder_level" name="reorder_level" />
         </label>
+        <label class="field">
+          <span class="field-label">GST Tax <span class="required-indicator" aria-hidden="true">*</span></span>
+          <select required aria-required="true" [(ngModel)]="product.gstTaxId" name="gstTaxId" #gstTaxIdModel="ngModel">
+            <option value="">Select GST Tax</option>
+            <option [ngValue]="1">5%</option>
+            <option [ngValue]="2">12%</option>
+            <option [ngValue]="6">18%</option>
+          </select>
+          <div class="mat-error" *ngIf="gstTaxIdModel.invalid && (gstTaxIdModel.touched || submitted)">GST tax is required.</div>
+        </label>
+      </div>
+      <div class="row two-col">
+        <label class="field checkbox-field">
+          <span class="field-label">Prescription Required?</span>
+          <div class="checkbox-control">
+            <input type="checkbox" [(ngModel)]="product.isPrescriptionRequired" name="isPrescriptionRequired" />
+            <span>Yes, doctor prescription is required</span>
+          </div>
+        </label>
+        <div></div>
       </div>
     </section>
 
@@ -76,35 +81,102 @@
     </section>
 
     <section class="form-block">
-      <h3><span class="panel-icon rose"><mat-icon>payments</mat-icon></span> Pricing & Regulatory</h3>
-      <div class="row three-col">
-        <label class="field">
-          <span class="field-label">Purchasing Unit Price <span class="required-indicator" aria-hidden="true">*</span></span>
-          <input type="text" required aria-required="true" placeholder="INR 0.00" [(ngModel)]="product.purchasing_unit_price" name="purchasing_unit_price" #purchasingUnitPriceModel="ngModel" />
-          <div class="mat-error" *ngIf="purchasingUnitPriceModel.invalid && (purchasingUnitPriceModel.touched || submitted)">Purchasing unit price is required.</div>
-        </label>
-        <label class="field">
-          <span class="field-label">Selling Unit Price <span class="required-indicator" aria-hidden="true">*</span></span>
-          <input type="text" required aria-required="true" placeholder="INR 0.00" [(ngModel)]="product.selling_unit_price" name="selling_unit_price" #sellingUnitPriceModel="ngModel" />
-          <div class="mat-error" *ngIf="sellingUnitPriceModel.invalid && (sellingUnitPriceModel.touched || submitted)">Selling unit price is required.</div>
-        </label>
-        <label class="field">
-          <span class="field-label">Quantity <span class="required-indicator" aria-hidden="true">*</span></span>
-          <input type="text" required aria-required="true" placeholder="e.g., 100" [(ngModel)]="product.quantity_on_hand" name="quantity" #quantityModel="ngModel" />
-          <div class="mat-error" *ngIf="quantityModel.invalid && (quantityModel.touched || submitted)">Quantity is required.</div>
-        </label>
+      <h3><span class="panel-icon rose"><mat-icon>payments</mat-icon></span> Inventory</h3>
+      <div class="inventory-actions">
+        <button type="button" class="add-row-btn" (click)="addInventoryRow()">Add Inventory Row</button>
       </div>
-      <div class="row two-col">
-        <label class="field">
-          <span class="field-label">GST Tax <span class="required-indicator" aria-hidden="true">*</span></span>
-          <select required aria-required="true" [(ngModel)]="product.gstTaxId" name="gstTaxId" #gstTaxIdModel="ngModel">
-            <option value="">Select GST Tax</option>
-            <option [ngValue]="1">5%</option>
-            <option [ngValue]="2">12%</option>
-            <option [ngValue]="6">18%</option>
-          </select>
-          <div class="mat-error" *ngIf="gstTaxIdModel.invalid && (gstTaxIdModel.touched || submitted)">GST tax is required.</div>
-        </label>
+
+      <div class="inventory-table-wrap">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th>Batch Number</th>
+              <th>Expiry Date</th>
+              <th>Location</th>
+              <th>Purchasing Unit Price</th>
+              <th>Selling Unit Price</th>
+              <th>Quantity</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of inventoryRows; let i = index; trackBy: trackInventoryRow">
+              <td>
+                <input
+                  type="text"
+                  required
+                  aria-required="true"
+                  placeholder="e.g., BATCH-2026-01"
+                  [(ngModel)]="row.batchNumber"
+                  [name]="'batchNumber-' + i"
+                  #batchNumberModel="ngModel"
+                />
+                <div class="mat-error" *ngIf="batchNumberModel.invalid && (batchNumberModel.touched || submitted)">Batch number is required.</div>
+              </td>
+              <td>
+                <input
+                  type="date"
+                  [(ngModel)]="row.expirationDate"
+                  [name]="'expirationDate-' + i"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  placeholder="e.g., Rack A-12"
+                  [(ngModel)]="row.location"
+                  [name]="'location-' + i"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  required
+                  aria-required="true"
+                  placeholder="INR 0.00"
+                  [(ngModel)]="row.purchasingUnitPrice"
+                  [name]="'purchasingUnitPrice-' + i"
+                  #purchasingUnitPriceModel="ngModel"
+                />
+                <div class="mat-error" *ngIf="purchasingUnitPriceModel.invalid && (purchasingUnitPriceModel.touched || submitted)">Purchasing unit price is required.</div>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  required
+                  aria-required="true"
+                  placeholder="INR 0.00"
+                  [(ngModel)]="row.sellingUnitPrice"
+                  [name]="'sellingUnitPrice-' + i"
+                  #sellingUnitPriceModel="ngModel"
+                />
+                <div class="mat-error" *ngIf="sellingUnitPriceModel.invalid && (sellingUnitPriceModel.touched || submitted)">Selling unit price is required.</div>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  required
+                  aria-required="true"
+                  placeholder="e.g., 100"
+                  [(ngModel)]="row.quantity"
+                  [name]="'quantity-' + i"
+                  #quantityModel="ngModel"
+                />
+                <div class="mat-error" *ngIf="quantityModel.invalid && (quantityModel.touched || submitted)">Quantity is required.</div>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="delete-row-btn"
+                  [disabled]="inventoryRows.length === 1"
+                  (click)="removeInventoryRow(i)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -117,6 +189,7 @@
     </div>
   </form>
 
+  <!--
   <section class="insight-cards">
     <article class="insight tip">
       <h4><mat-icon>info</mat-icon> Quick Tip</h4>
@@ -131,4 +204,5 @@
       <p><strong>Paracetamol 650mg</strong><br><small>2 minutes ago by Dr. Sarah</small></p>
     </article>
   </section>
+  -->
 </div>

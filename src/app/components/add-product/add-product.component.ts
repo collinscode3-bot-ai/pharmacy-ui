@@ -3,6 +3,16 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateMedicineRequest, InventoryCreateDTO, MedicineDetailsResponse, MedicineService } from '../../services/medicine.service';
 
+interface InventoryRowForm {
+  inventoryId?: number;
+  batchNumber: string;
+  expirationDate: string;
+  location: string;
+  purchasingUnitPrice: string;
+  sellingUnitPrice: string;
+  quantity: string;
+}
+
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -15,17 +25,14 @@ export class AddProductComponent implements OnInit {
     genericName: '',
     category: '',
     manufacturer: '',
-    batch_number: '',
-    location: '',
-    expiration_date: '',
     reorder_level: '',
     strength: '',
     unitType: '',
-    purchasing_unit_price: '',
-    selling_unit_price: '',
-    quantity_on_hand: '',
-    gstTaxId: '' as number | ''
+    gstTaxId: '' as number | '',
+    isPrescriptionRequired: false
   };
+
+  inventoryRows: InventoryRowForm[] = [this.createEmptyInventoryRow()];
 
   submitted = false;
   saving = false;
@@ -63,9 +70,33 @@ export class AddProductComponent implements OnInit {
     this.router.navigate(['/medicine-catalog']);
   }
 
+  addInventoryRow() {
+    this.inventoryRows = [...this.inventoryRows, this.createEmptyInventoryRow()];
+  }
+
+  removeInventoryRow(index: number) {
+    if (this.inventoryRows.length <= 1) {
+      return;
+    }
+
+    this.inventoryRows = this.inventoryRows.filter((_, i) => i !== index);
+  }
+
+  trackInventoryRow(index: number) {
+    return index;
+  }
+
   save(form?: NgForm) {
     this.submitted = true;
-    if (form && form.invalid) return;
+    if (form && form.invalid) {
+      this.saveError = 'Please complete all required fields before saving.';
+      return;
+    }
+
+    if (!this.inventoryRows.length) {
+      this.saveError = 'At least one inventory row is required.';
+      return;
+    }
 
     const payload = this.buildPayload();
     this.saving = true;
@@ -107,23 +138,31 @@ export class AddProductComponent implements OnInit {
   }
 
   private patchForm(res: MedicineDetailsResponse) {
-    const inv = (res.inventories && res.inventories.length ? res.inventories[0] : {}) as InventoryCreateDTO;
+    const inventories = (res.inventories && res.inventories.length ? res.inventories : [{} as InventoryCreateDTO]);
     this.product.name = res.name ?? '';
     this.product.genericName = res.genericName ?? '';
     this.product.category = res.productType ?? '';
     this.product.manufacturer = res.manufacturer ?? '';
-    this.product.batch_number = inv.batchNumber ?? '';
-    this.product.location = inv.location ?? '';
-    const expiration = inv.expirationDate ?? inv.expiryDate;
-    this.product.expiration_date = expiration ? String(expiration).slice(0, 10) : '';
     this.product.reorder_level = res.reorderLevel != null ? String(res.reorderLevel) : '';
     this.product.strength = res.strength ?? '';
     this.product.unitType = res.dosageForm ?? '';
-    this.product.purchasing_unit_price = inv.purchasePrice != null ? String(inv.purchasePrice) : '';
-    this.product.selling_unit_price = inv.sellingPrice != null ? String(inv.sellingPrice) : '';
-    const quantity = inv.quantityOnHand ?? inv.quantity;
-    this.product.quantity_on_hand = quantity != null ? String(quantity) : '';
     this.product.gstTaxId = res.taxId ?? '';
+    this.product.isPrescriptionRequired = this.toBoolean(res.isPrescriptionRequired);
+
+    this.inventoryRows = inventories.map((inv) => {
+      const expiration = inv.expirationDate ?? inv.expiryDate;
+      const quantity = inv.quantityOnHand ?? inv.quantity;
+
+      return {
+        inventoryId: this.toPositiveInt(inv.inventoryId ?? inv.id),
+        batchNumber: inv.batchNumber ?? '',
+        expirationDate: expiration ? String(expiration).slice(0, 10) : '',
+        location: inv.location ?? '',
+        purchasingUnitPrice: inv.purchasePrice != null ? String(inv.purchasePrice) : '',
+        sellingUnitPrice: inv.sellingPrice != null ? String(inv.sellingPrice) : '',
+        quantity: quantity != null ? String(quantity) : ''
+      };
+    });
   }
 
   private buildPayload(): CreateMedicineRequest {
@@ -133,14 +172,19 @@ export class AddProductComponent implements OnInit {
       2: '12%',
       6: '18%'
     };
-    const inventory: InventoryCreateDTO = {
-      batchNumber: this.trimOrUndefined(this.product.batch_number),
-      location: this.trimOrUndefined(this.product.location),
-      expirationDate: this.trimOrUndefined(this.product.expiration_date),
-      quantityOnHand: this.toInt(this.product.quantity_on_hand),
-      purchasePrice: this.toNumber(this.product.purchasing_unit_price),
-      sellingPrice: this.toNumber(this.product.selling_unit_price)
-    };
+    const inventories: InventoryCreateDTO[] = this.inventoryRows.map((row) => {
+      const inventoryId = this.toPositiveInt(row.inventoryId);
+
+      return {
+        inventoryId,
+        batchNumber: this.trimOrUndefined(row.batchNumber),
+        location: this.trimOrUndefined(row.location),
+        expirationDate: this.trimOrUndefined(row.expirationDate),
+        quantityOnHand: this.toInt(row.quantity),
+        purchasePrice: this.toNumber(row.purchasingUnitPrice),
+        sellingPrice: this.toNumber(row.sellingUnitPrice)
+      };
+    });
 
     return {
       name: this.product.name.trim(),
@@ -150,16 +194,40 @@ export class AddProductComponent implements OnInit {
       strength: this.trimOrUndefined(this.product.strength),
       dosageForm: this.trimOrUndefined(this.product.unitType),
       reorderLevel: this.toInt(this.product.reorder_level),
-      isPrescriptionRequired: this.product.category === 'Medicine',
+      isPrescriptionRequired: this.product.isPrescriptionRequired ? 1 : 0,
       taxId,
       taxName: taxNameMap[taxId],
-      inventories: [inventory]
+      inventories
     };
   }
 
   private trimOrUndefined(value: string | null | undefined): string | undefined {
     const v = (value ?? '').trim();
     return v.length ? v : undefined;
+  }
+
+  private createEmptyInventoryRow(): InventoryRowForm {
+    return {
+      batchNumber: '',
+      expirationDate: '',
+      location: '',
+      purchasingUnitPrice: '',
+      sellingUnitPrice: '',
+      quantity: ''
+    };
+  }
+
+  private toPositiveInt(value: string | number | null | undefined): number | undefined {
+    const n = this.toInt(value);
+    return n != null && n > 0 ? n : undefined;
+  }
+
+  private toBoolean(value: boolean | number | null | undefined): boolean {
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    return value === 1;
   }
 
   private toInt(value: string | number | null | undefined): number | undefined {

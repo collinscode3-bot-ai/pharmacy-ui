@@ -55,7 +55,7 @@ export interface CreateMedicineRequest {
   strength?: string;
   dosageForm?: string;
   reorderLevel?: number;
-  isPrescriptionRequired?: boolean;
+  isPrescriptionRequired?: number | boolean;
   description?: string;
   taxId: number;
   taxName?: string;
@@ -72,7 +72,7 @@ export interface MedicineDetailsResponse {
   strength?: string;
   dosageForm?: string;
   reorderLevel?: number;
-  isPrescriptionRequired?: boolean;
+  isPrescriptionRequired?: number | boolean;
   taxId?: number;
   taxName?: string;
   inventories?: InventoryCreateDTO[];
