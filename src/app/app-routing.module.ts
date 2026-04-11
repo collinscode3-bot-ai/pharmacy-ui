@@ -7,6 +7,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MedicineCatalogComponent } from './components/medicine-catalog/medicine-catalog.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { MedicinesBillingComponent } from './components/medicines-billing/medicines-billing.component';
+import { BillingHistoryComponent } from './components/billing-history/billing-history.component';
+import { ProcessReturnComponent } from './components/process-return/process-return.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -16,6 +18,8 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'medicine-catalog', component: MedicineCatalogComponent, canActivate: [AuthGuard] },
   { path: 'billing', component: MedicinesBillingComponent, canActivate: [AuthGuard] },
+  { path: 'billing-history', component: BillingHistoryComponent, canActivate: [AuthGuard] },
+  { path: 'process-return/:id', component: ProcessReturnComponent, canActivate: [AuthGuard] },
   { path: 'inventory/add-product', component: AddProductComponent, canActivate: [AuthGuard] },
   { path: 'inventory/edit-product/:id', component: AddProductComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' }

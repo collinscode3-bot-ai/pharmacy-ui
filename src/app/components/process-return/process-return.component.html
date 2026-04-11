@@ -1,0 +1,171 @@
+<div class="process-return-page">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <span class="crumb" (click)="cancel()">RETURNS MANAGEMENT</span>
+    <mat-icon class="crumb-sep">chevron_right</mat-icon>
+    <span class="crumb active">PROCESS RETURN</span>
+  </nav>
+
+  <!-- Page header -->
+  <div class="page-header-row">
+    <h1 class="page-title">Return Authorization</h1>
+    <button class="btn-print"><mat-icon>print</mat-icon> Print Receipt</button>
+  </div>
+
+  <!-- Loading -->
+  <app-please-wait *ngIf="loading" message="Loading bill details..."></app-please-wait>
+
+  <!-- Error -->
+  <div class="status-msg error-msg" *ngIf="!loading && errorMessage">
+    <mat-icon>error_outline</mat-icon> {{ errorMessage }}
+  </div>
+
+  <!-- Success -->
+  <div class="status-msg success-msg" *ngIf="submitSuccess">
+    <mat-icon>check_circle</mat-icon> Return processed successfully. Redirecting...
+  </div>
+
+  <ng-container *ngIf="!loading && bill && !submitSuccess">
+
+    <!-- Original bill details card -->
+    <section class="bill-details-card">
+      <div class="card-section-label">ORIGINAL BILL DETAILS</div>
+      <div class="bill-info-grid">
+        <div class="info-col">
+          <div class="info-label">BILL NUMBER</div>
+          <div class="info-value bill-no">#{{ bill.billNo }}</div>
+        </div>
+        <div class="info-col">
+          <div class="info-label">BILLING DATE</div>
+          <div class="info-value">{{ bill.billDate }}</div>
+        </div>
+        <div class="info-col">
+          <div class="info-label">CUSTOMER NAME</div>
+          <div class="info-value">{{ bill.customerName }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Select items for return -->
+    <section class="panel items-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <mat-icon>grid_on</mat-icon>
+          <span>Select Items for Return</span>
+        </div>
+        <span class="panel-hint">Enter the quantity of items actually returned by the customer</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>ITEM NAME</th>
+              <th>BATCH NUMBER</th>
+              <th class="center-col">SOLD QTY</th>
+              <th class="center-col">RETURN QTY</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items; let i = index">
+              <td>
+                <div class="item-name">{{ item.medicineName }}</div>
+                <div class="item-sub" *ngIf="item.category || item.form">
+                  {{ item.category }}<span *ngIf="item.category && item.form"> · </span>{{ item.form }}
+                </div>
+              </td>
+              <td>
+                <span class="batch-chip">{{ item.batchNumber || '—' }}</span>
+              </td>
+              <td class="center-col">{{ item.soldQty }}</td>
+              <td class="center-col">
+                <div class="qty-field">
+                  <input
+                    type="number"
+                    class="qty-input"
+                    [class.qty-invalid]="item.returnQty > item.soldQty"
+                    [(ngModel)]="item.returnQty"
+                    min="0"
+                    [max]="item.soldQty"
+                  />
+                  <div class="qty-error" *ngIf="item.returnQty > item.soldQty">
+                    Max {{ item.soldQty }}
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!items.length">
+              <td colspan="4" class="empty-row">No items found for this bill.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Return remarks -->
+    <section class="panel remarks-panel">
+      <div class="remarks-header">
+        <mat-icon>menu</mat-icon>
+        <span class="remarks-label">RETURN REMARKS</span>
+        <span class="required-star">*</span>
+      </div>
+      <textarea
+        class="remarks-textarea"
+        [class.input-invalid]="remarksInvalid"
+        placeholder="Enter any specific observations about the medication condition, reason for return, or inspection results..."
+        [(ngModel)]="remarks"
+        (input)="remarksInvalid = false"
+        rows="3"
+      ></textarea>
+      <div class="field-error" *ngIf="remarksInvalid">Remarks are mandatory.</div>
+    </section>
+
+    <!-- Submit error -->
+    <div class="status-msg error-msg" *ngIf="submitError">
+      <mat-icon>error_outline</mat-icon> {{ submitError }}
+    </div>
+
+    <!-- Footer row -->
+    <div class="return-footer">
+      <div class="footer-summary">
+        <div class="summary-item">
+          <div class="summary-label">ITEMS RETURNING</div>
+          <div class="summary-value">{{ itemsReturningCount }} Types</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <div class="summary-label">TOTAL QTY</div>
+          <div class="summary-value">{{ totalReturnQty }} Units</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <div class="summary-label">REFUND AMOUNT</div>
+          <div class="summary-value refund-amount">{{ totalRefundAmount | currency:'INR':'symbol':'1.2-2' }}</div>
+        </div>
+      </div>
+      <div class="footer-actions">
+        <button class="btn-cancel" (click)="cancel()">Cancel</button>
+        <button
+          class="btn-submit"
+          (click)="submit()"
+          [disabled]="submitting || hasQuantityErrors"
+        >
+          <span *ngIf="!submitting">Adjust Bill &amp; Inventory &#x2197;</span>
+          <app-please-wait *ngIf="submitting" message="Processing..."></app-please-wait>
+        </button>
+      </div>
+    </div>
+
+    <!-- Regulatory note -->
+    <div class="regulatory-note">
+      <mat-icon class="reg-icon">info</mat-icon>
+      <p>
+        <strong>Regulatory Note:</strong> Returned medicines must be inspected for seal integrity and
+        storage compliance before being restocked into the active inventory. Please ensure all returned
+        narcotics are logged in the Controlled Substances ledger separately.
+      </p>
+    </div>
+
+  </ng-container>
+</div>

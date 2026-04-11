@@ -1,0 +1,112 @@
+<div class="page billing-history-page">
+  <div class="content-container">
+    <div class="page-header">
+      <h1>Sales & Billing History</h1>
+      <p class="lead">Review, search, and manage historical transactions and invoices.</p>
+    </div>
+
+    <section class="search-panel">
+      <div class="filters">
+        <div class="field">
+          <select [(ngModel)]="filterCategory">
+            <option>Bill No</option>
+            <option>Patient Name</option>
+          </select>
+        </div>
+
+        <div class="field search-input">
+          <input
+            [placeholder]="filterCategory === 'Bill Date' ? 'Enter bill date (e.g. 24 Oct, 2023)' : 'Enter identification number or name'"
+            [(ngModel)]="searchKeyword"
+            (keyup.enter)="applySearch()"
+          />
+        </div>
+
+        <div class="field">
+          <select [(ngModel)]="matchType">
+            <option>All</option>
+            <option>Exact</option>
+          </select>
+        </div>
+
+        <div class="field action-field">
+          <button class="btn-primary" (click)="applySearch()">Search</button>
+          <button class="btn-reset" type="button" (click)="resetSearch()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel recent-transactions">
+      <h3>Recent Transactions</h3>
+
+      <app-please-wait *ngIf="loading" message="Loading transactions..."></app-please-wait>
+
+      <div class="error-msg" *ngIf="!loading && errorMessage">
+        <mat-icon>error_outline</mat-icon> {{ errorMessage }}
+      </div>
+
+      <div class="table-wrap" *ngIf="!loading">
+        <table class="transactions-table">
+          <thead>
+            <tr>
+              <th>Bill No</th>
+              <th>Bill Date</th>
+              <th>Patient Name</th>
+              <th class="amount">Total Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of transactions">
+              <td class="bill-no">{{t.billNo}}</td>
+              <td class="bill-date">{{t.billDate}}</td>
+              <td class="patient">{{t.patientName}}</td>
+              <td class="amount">{{t.totalAmount | currency:'INR':'symbol':'1.2-2'}}</td>
+              <td>
+                <button class="view-btn" (click)="viewTransaction(t)">View</button>
+              </td>
+            </tr>
+
+            <tr *ngIf="!transactions.length && !errorMessage">
+              <td class="empty" colspan="5">No transactions found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer" *ngIf="!loading && totalElements > 0">
+        <div class="rows-per-page">
+          <label for="rowsPerPage">Rows per page</label>
+          <select id="rowsPerPage" [(ngModel)]="rowsPerPage" (ngModelChange)="onRowsPerPageChange()">
+            <option *ngFor="let option of rowsPerPageOptions" [value]="option">{{option}}</option>
+          </select>
+        </div>
+
+        <div class="pagination-note">
+          Showing {{startRow}} to {{endRow}} of {{totalElements}} transactions
+        </div>
+
+        <div class="pagination-controls">
+          <button class="pager-btn" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+          <span>Page {{currentPage}} of {{totalPages}}</span>
+          <button class="pager-btn" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="summary-cards">
+      <article class="card revenue">
+        <div class="card-title">Today's Revenue</div>
+        <div class="card-value">{{4821.5 | currency:'INR':'symbol':'1.2-2'}}</div>
+      </article>
+      <article class="card bills">
+        <div class="card-title">Bills Generated</div>
+        <div class="card-value">84</div>
+      </article>
+      <article class="card returns">
+        <div class="card-title">Items Returned</div>
+        <div class="card-value">12</div>
+      </article>
+    </section>
+  </div>
+</div>

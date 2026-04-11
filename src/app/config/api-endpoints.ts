@@ -47,7 +47,14 @@ export const API_ENDPOINTS = {
   },
 
   SALES: {
-    CREATE: `${BASE}/api/sales`
+    CREATE: `${BASE}/api/sales`,
+    SEARCH: `${BASE}/api/sales/search`,
+    DETAILS: (id: string | number) => `${BASE}/api/sales/${id}`,
+    PROCESS_RETURN: `${BASE}/api/sales/process-return`
+  },
+
+  RETURNS: {
+    CREATE: `${BASE}/api/returns`
   },
 
   USERS: {
