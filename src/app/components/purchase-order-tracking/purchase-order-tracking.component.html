@@ -1,0 +1,173 @@
+<div class="po-track-root container">
+  <section class="page-head">
+    <div>
+      <h1>Purchase Order Tracking</h1>
+      <p>Manage and monitor your clinical supply chain lifecycle.</p>
+    </div>
+    <div class="auto-update">
+      <mat-icon>update</mat-icon>
+      <span>{{ lastUpdatedLabel }}</span>
+    </div>
+  </section>
+
+  <section class="card filter-card">
+    <div class="filters-grid">
+      <label class="field">
+        <span class="field-label">SEARCH KEYWORDS</span>
+        <div class="input-wrap with-icon">
+          <mat-icon>search</mat-icon>
+          <input
+            type="text"
+            [(ngModel)]="keyword"
+            placeholder="Enter PO number, supplier..."
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+      </label>
+
+      <label class="field">
+        <span class="field-label">CATEGORY</span>
+        <select [(ngModel)]="category">
+          <option value="all">All</option>
+          <option value="poNumber">PO No</option>
+          <option value="supplierName">Supplier Name</option>
+          <option value="status">PO Status</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="field-label">DATE RANGE</span>
+        <select [(ngModel)]="dateRange">
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="90">Last 90 Days</option>
+          <option value="all">All Time</option>
+        </select>
+      </label>
+
+      <div class="filter-actions">
+        <button type="button" class="search-btn" (click)="onSearch()">
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+        <button type="button" class="icon-btn" aria-label="Advanced filters">
+          <mat-icon>tune</mat-icon>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card orders-card">
+    <div class="orders-head">
+      <h3>Recent Orders</h3>
+      <div class="head-actions">
+        <button type="button">Export CSV</button>
+        <button type="button">Print Manifest</button>
+      </div>
+    </div>
+
+    <div class="table-wrap" *ngIf="!loading; else loadingTpl">
+      <table *ngIf="pagedOrders.length; else emptyTpl">
+        <thead>
+          <tr>
+            <th>PO NO</th>
+            <th>PO DATE</th>
+            <th>SUPPLIER NAME</th>
+            <th>TOTAL VALUE</th>
+            <th>STATUS</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of pagedOrders; trackBy: trackByPoNumber">
+            <td class="po-number">{{ order.poNumber }}</td>
+            <td>{{ order.poDate | date:'MMM d, y' }}</td>
+            <td>{{ order.supplierName }}</td>
+            <td>{{ order.totalValue | currency:'INR':'symbol':'1.2-2' }}</td>
+            <td>
+              <span class="status-pill" [ngClass]="order.statusKey">{{ order.statusLabel }}</span>
+            </td>
+            <td>
+              <button type="button" class="view-btn" (click)="onViewOrder(order)">Receive Delivery</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #loadingTpl>
+      <div class="orders-loading-state">
+        <app-please-wait message="Please wait... loading purchase orders."></app-please-wait>
+      </div>
+    </ng-template>
+
+    <ng-template #emptyTpl>
+      <div class="empty-state">No purchase orders found for the selected filters.</div>
+    </ng-template>
+
+    <div class="table-footer" *ngIf="filteredOrders.length">
+      <span>Showing {{ startOrderIndex }}-{{ endOrderIndex }} of {{ filteredOrders.length }} orders</span>
+      <div class="pagination">
+        <button type="button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Previous page">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <ng-container *ngFor="let token of paginationTokens">
+          <button
+            *ngIf="token !== '...'; else dotsTpl"
+            type="button"
+            [class.active]="token === currentPage"
+            (click)="goToPage(+token)"
+          >
+            {{ token }}
+          </button>
+          <ng-template #dotsTpl>
+            <span class="dots">...</span>
+          </ng-template>
+        </ng-container>
+
+        <button type="button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Next page">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="summary-grid">
+    <article class="card stat-card">
+      <span class="label">TOTAL ACTIVE POs</span>
+      <div class="value-row">
+        <strong>{{ totalActivePos }}</strong>
+        <mat-icon>description</mat-icon>
+      </div>
+    </article>
+
+    <article class="card stat-card">
+      <span class="label">IN TRANSIT</span>
+      <div class="value-row">
+        <strong>{{ inTransitCount }}</strong>
+        <mat-icon>local_shipping</mat-icon>
+      </div>
+    </article>
+
+    <article class="card stat-card pending">
+      <span class="label">PENDING APPROVAL</span>
+      <div class="value-row">
+        <strong>{{ pendingApprovalCount }}</strong>
+        <mat-icon>hourglass_top</mat-icon>
+      </div>
+    </article>
+
+    <article class="card stat-card spend">
+      <span class="label">MONTHLY SPEND</span>
+      <div class="value-row">
+        <strong>{{ monthlySpend | currency:'INR':'symbol':'1.1-1' }}</strong>
+        <button type="button" aria-label="Spend insights">
+          <mat-icon>show_chart</mat-icon>
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <p class="status-note" *ngIf="statusMessage">{{ statusMessage }}</p>
+</div>

@@ -62,8 +62,11 @@
               <td class="bill-date">{{t.billDate}}</td>
               <td class="patient">{{t.patientName}}</td>
               <td class="amount">{{t.totalAmount | currency:'INR':'symbol':'1.2-2'}}</td>
-              <td>
-                <button class="view-btn" (click)="viewTransaction(t)">View</button>
+              <td class="actions-cell">
+                <button class="view-btn" (click)="viewTransaction(t)">Exchange Products</button>
+                <button class="bill-btn" (click)="viewBill(t)" [disabled]="openingBillId === t.billNo">
+                  {{ openingBillId === t.billNo ? 'Opening...' : 'View Bill' }}
+                </button>
               </td>
             </tr>
 

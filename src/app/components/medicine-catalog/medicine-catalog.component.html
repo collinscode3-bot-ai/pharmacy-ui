@@ -68,7 +68,7 @@
           <td class="status-cell">
             <div class="status">
               <span class="dot" [ngClass]="{'green': m.status === 'in_stock', 'amber': m.status === 'low_stock', 'red': m.status === 'out_of_stock'}"></span>
-              <span class="label">{{ m.status === 'in_stock' ? 'In Stock' : (m.status === 'low_stock' ? 'Low Stock (5)' : 'Out of Stock') }}</span>
+              <span class="label">{{ m.status === 'in_stock' ? 'In Stock' : (m.status === 'low_stock' ? 'Low Stock' : 'Out of Stock') }}</span>
             </div>
           </td>
           <td class="actions-cell">

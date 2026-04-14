@@ -161,11 +161,31 @@ export class MedicinesBillingComponent implements OnInit, OnDestroy {
     return digits.length === 10;
   }
 
-  clearOrder(): void {
+  clearOrder(clearInvoice = true): void {
     this.orderItems = [];
     this.payment = { cash: 0, card: 0, upi: 0 };
     this.customDiscount = 0;
-    this.latestInvoiceDocument = null;
+    if (clearInvoice) {
+      this.latestInvoiceDocument = null;
+    }
+  }
+
+  startNewBill(): void {
+    this.clearOrder();
+    this.searchTerm = '';
+    this.customerName = 'Walk-in Customer';
+    this.customerPhone = '';
+    this.isCustomerModalOpen = false;
+    this.editCustomerName = '';
+    this.editCustomerPhone = '';
+    this.editCustomerNameTouched = false;
+    this.editCustomerPhoneTouched = false;
+    this.discountTouched = false;
+    this.isSaleCompleted = false;
+    this.saleError = '';
+    this.saleSuccess = '';
+    this.loadError = '';
+    this.loadMedicines();
   }
 
   onSearchChange(value: string): void {
@@ -259,7 +279,7 @@ export class MedicinesBillingComponent implements OnInit, OnDestroy {
           ? 'Sale completed successfully. Invoice is ready to download.'
           : 'Sale completed successfully.';
         this.isSaleCompleted = true;
-        this.clearOrder();
+        this.clearOrder(false);
         this.loadMedicines(this.searchTerm);
       },
       error: () => {

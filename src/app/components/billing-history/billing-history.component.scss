@@ -220,6 +220,13 @@
     font-style: italic;
   }
 
+  .actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
   .view-btn {
     background: transparent;
     border: 1px solid #c8d8ef;
@@ -228,6 +235,21 @@
     color: #0d4ea8;
     font-weight: 700;
     cursor: pointer;
+  }
+
+  .bill-btn {
+    background: #0f172a;
+    border: 1px solid #111827;
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .bill-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
   }
 
   .table-footer {

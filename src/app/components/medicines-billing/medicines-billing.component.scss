@@ -104,6 +104,14 @@
   font-weight: 700;
 }
 
+.initial-loader {
+  margin-top: 14px;
+  border-radius: 12px;
+  border: 1px solid #dde4ef;
+  background: #f7f9fc;
+  padding: 18px;
+}
+
 .product-grid {
   margin-top: 28px;
   display: grid;
@@ -265,14 +273,17 @@
   justify-content: space-between;
 }
 
-.session-head h2 {
-  margin: 0;
-  color: #111827;
-  font-size: 1.62rem;
-  letter-spacing: -0.01em;
-  font-weight: 800;
+.session-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
 
+.session-feedback {
+  margin-top: 10px;
+}
+
+.new-bill-btn,
 .clear-btn {
   border: 0;
   background: transparent;
@@ -280,6 +291,18 @@
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
+}
+
+.new-bill-btn {
+  color: #0f5d3a;
+}
+
+.session-head h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.62rem;
+  letter-spacing: -0.01em;
+  font-weight: 800;
 }
 
 .customer-card {

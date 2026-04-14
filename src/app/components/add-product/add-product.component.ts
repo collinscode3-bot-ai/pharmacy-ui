@@ -88,6 +88,9 @@ export class AddProductComponent implements OnInit {
 
   save(form?: NgForm) {
     this.submitted = true;
+    this.saveError = '';
+    this.saveSuccess = '';
+
     if (form && form.invalid) {
       this.saveError = 'Please complete all required fields before saving.';
       return;
@@ -100,8 +103,6 @@ export class AddProductComponent implements OnInit {
 
     const payload = this.buildPayload();
     this.saving = true;
-    this.saveError = '';
-    this.saveSuccess = '';
 
     if (this.editMode && this.medicineId) {
       payload.medicineId = this.medicineId;

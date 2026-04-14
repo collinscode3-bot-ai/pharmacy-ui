@@ -7,7 +7,13 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
+  inventoryExpanded = false;
+
   constructor(private auth: AuthService) {}
+
+  toggleInventorySublinks(): void {
+    this.inventoryExpanded = !this.inventoryExpanded;
+  }
 
   logout() {
     this.auth.logout();

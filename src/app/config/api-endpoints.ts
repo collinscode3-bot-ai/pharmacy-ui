@@ -20,6 +20,7 @@ export const API_ENDPOINTS = {
   DASHBOARD: {
     SUMMARY: `${BASE}/api/dashboard/summary`,
     LOW_STOCK: `${BASE}/api/dashboard/low-stock`,
+    STOCK_REORDER_STATUS: `${BASE}/api/dashboard/stock-reorder-status`,
     EXPIRING: `${BASE}/api/dashboard/expiring`,
     SALES_TRENDS: `${BASE}/api/dashboard/sales-trends`,
     RECENT_ACTIVITY: `${BASE}/api/dashboard/recent-activity`,
@@ -46,10 +47,21 @@ export const API_ENDPOINTS = {
     DETAILS: (id: string | number) => `${BASE}/api/orders/${id}`
   },
 
+  PURCHASES: {
+    CREATE: `${BASE}/api/purchases`,
+    SEARCH: `${BASE}/api/purchases/search`,
+    DETAILS: (poNumber: string | number) => `${BASE}/api/purchases/${encodeURIComponent(String(poNumber))}`
+  },
+
+  PURCHASE_RECEIPTS: {
+    CREATE: `${BASE}/api/purchase-receipts`
+  },
+
   SALES: {
     CREATE: `${BASE}/api/sales`,
     SEARCH: `${BASE}/api/sales/search`,
     DETAILS: (id: string | number) => `${BASE}/api/sales/${id}`,
+    INVOICE: (billNo: string | number) => `${BASE}/api/sales/${billNo}/invoice`,
     PROCESS_RETURN: `${BASE}/api/sales/process-return`
   },
 
@@ -61,6 +73,10 @@ export const API_ENDPOINTS = {
     LIST: `${BASE}/api/users`,
     DETAILS: (id: string | number) => `${BASE}/api/users/${id}`,
     UPDATE: (id: string | number) => `${BASE}/api/users/${id}`
+  },
+
+  SUPPLIERS: {
+    HELP_TEXT: (character: string) => `${BASE}/api/suppliers/help-text?character=${encodeURIComponent(character)}`
   }
 } as const;
 

@@ -1,0 +1,169 @@
+<div class="low-stock-root container">
+  <header class="page-header">
+    <div>
+      <h2>Inventory Alert: Low &amp; Out of Stock</h2>
+      <p>Critical monitoring of medical supplies requiring immediate attention.</p>
+    </div>
+  </header>
+
+  <section class="card filter-card">
+    <div class="filters-grid">
+      <label class="field">
+        <span>CATEGORY</span>
+        <select [(ngModel)]="selectedCategory">
+          <option value="all">All</option>
+          <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+        </select>
+      </label>
+
+      <label class="field keyword-field">
+        <span>KEYWORD SEARCH</span>
+        <div class="search-box">
+          <mat-icon>search</mat-icon>
+          <input
+            type="text"
+            [(ngModel)]="keyword"
+            placeholder="Enter product name or SKU..."
+            (keyup.enter)="search()"
+          />
+        </div>
+      </label>
+
+      <label class="field">
+        <span>MATCH TYPE</span>
+        <select [(ngModel)]="matchType">
+          <option value="all">All</option>
+          <option value="contains">Contains</option>
+          <option value="exact">Exact</option>
+          <option value="starts_with">Starts With</option>
+        </select>
+      </label>
+
+      <div class="search-action">
+        <button mat-flat-button color="primary" class="search-btn" (click)="search()">
+          <mat-icon>tune</mat-icon>
+          Search
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card table-card">
+    <div class="table-loader" *ngIf="loading">
+      <app-please-wait message="Loading stock reorder status..."></app-please-wait>
+    </div>
+
+    <table *ngIf="!loading">
+      <thead>
+        <tr>
+          <th class="check-col">
+            <input
+              type="checkbox"
+              [checked]="isAllVisibleSelected"
+              [disabled]="!hasSelectableVisibleItems"
+              (change)="onToggleSelectAll($any($event.target).checked)"
+              aria-label="Select all visible rows"
+            />
+          </th>
+          <th>PRODUCT NAME</th>
+          <th>CURRENT QUANTITY</th>
+          <th class="order-col">ORDER STATUS</th>
+          <th>PREVIOUS SUPPLIER</th>
+          <!-- <th class="action-col">ACTION</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="errorMessage">
+          <td colspan="5" class="empty-row">{{ errorMessage }}</td>
+        </tr>
+
+        <tr *ngIf="!errorMessage && !pagedItems.length">
+          <td colspan="5" class="empty-row">No low stock or out-of-stock products found.</td>
+        </tr>
+
+        <tr *ngFor="let item of pagedItems">
+          <td class="check-col">
+            <input
+              type="checkbox"
+              [checked]="isSelected(item)"
+              [disabled]="!isSelectable(item)"
+              (change)="onToggleItem(item, $any($event.target).checked)"
+              [attr.aria-label]="'Select ' + item.productName"
+            />
+          </td>
+
+          <td class="product-col">
+            <div class="name">{{ item.productName }}</div>
+            <!-- <div class="meta" *ngIf="item.subtitle">{{ item.subtitle }}</div> -->
+          </td>
+
+          <td class="qty-col">
+            <span class="qty">{{ item.quantity | number:'2.0-0' }}</span>
+            <span class="status-chip" [ngClass]="statusClass(item)">{{ statusLabel(item) }}</span>
+          </td>
+
+          <td class="order-col">
+            <span class="order-status" [ngClass]="orderStatusClass(item)">{{ orderStatusLabel(item) }}</span>
+          </td>
+
+           <td>{{ item.supplier }}</td>
+
+          <!-- <td class="action-col">
+            <button class="view-btn" (click)="viewDetails(item)">
+              View Details
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+
+    <footer class="table-footer">
+      <div>
+        Showing {{ startItem }}-{{ endItem }} of {{ totalItems }} alert items
+      </div>
+
+      <nav class="pager" *ngIf="totalPages > 1" aria-label="Inventory alert pagination">
+        <button type="button" (click)="prevPage()" [disabled]="page === 0" aria-label="Previous page">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button
+          type="button"
+          *ngFor="let p of pageNumbers"
+          (click)="goToPage(p)"
+          [class.active]="p === page"
+        >
+          {{ p + 1 }}
+        </button>
+
+        <button type="button" (click)="nextPage()" [disabled]="page >= totalPages - 1" aria-label="Next page">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </nav>
+    </footer>
+  </section>
+
+  <section class="card action-bar">
+    <button type="button" class="ghost-btn" (click)="goHome()">
+      <mat-icon>home</mat-icon>
+      HOME
+    </button>
+
+    <button type="button" class="ghost-btn" (click)="clearFilters()">
+      <mat-icon>clear</mat-icon>
+      CLEAR
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="purchase-btn"
+      (click)="purchaseSelected()"
+      [disabled]="!hasAnySelection"
+    >
+      <mat-icon>local_mall</mat-icon>
+      PURCHASE SELECTED
+    </button>
+  </section>
+</div>

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { API_ENDPOINTS } from 'src/app/config/api-endpoints';
+import { Router } from '@angular/router';
 
 interface DashboardSummary {
   total?: number;
@@ -39,7 +40,7 @@ export class DashboardComponent implements OnInit {
 
   loading = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.loadDashboardCards();
@@ -155,5 +156,10 @@ export class DashboardComponent implements OnInit {
     }
 
     return text;
+  }
+
+  navigateToLowStock(): void {
+    // Navigate to the Low Stock Alert component
+    this.router.navigate(['/inventory']);
   }
 }

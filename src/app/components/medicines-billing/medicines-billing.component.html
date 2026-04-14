@@ -18,8 +18,12 @@
 
       <div class="products-error" *ngIf="loadError">{{ loadError }}</div>
 
+      <div class="initial-loader" *ngIf="isLoadingMedicines && medicines.length === 0">
+        <app-please-wait [message]="medicinesLoadingMessage"></app-please-wait>
+      </div>
+
       <div class="product-grid">
-        <div class="grid-loader" *ngIf="isLoadingMedicines">
+        <div class="grid-loader" *ngIf="isLoadingMedicines && medicines.length > 0">
           <app-please-wait [message]="medicinesLoadingMessage"></app-please-wait>
         </div>
 
@@ -32,12 +36,12 @@
             [class.is-out]="medicine.stock === 0"
             (click)="addToOrder(medicine)">
             <div class="card-top">
-              <div class="eyebrow" [class.red]="medicine.prescriptionOnly">{{ medicine.prescriptionOnly ? 'PRESCRIPTION ONLY' : 'PAIN RELIEF' }}</div>
+              <div class="eyebrow" [class.red]="medicine.prescriptionOnly">{{ medicine.prescriptionOnly ? 'PRESCRIPTION ONLY' : '' }}</div>
               <div class="price">{{ medicine.price | currency:'INR':'symbol':'1.2-2' }}</div>
             </div>
 
             <h3>{{ medicine.name }} <span>{{ medicine.dose }}</span></h3>
-            <p class="meta">{{ medicine.packInfo }} - Brand: {{ medicine.brand }}</p>
+            <p class="meta">{{ medicine.packInfo }}   -   Brand: {{ medicine.brand }}</p>
 
             <div class="chip-row">
               <span class="chip">{{ medicine.categoryTag }}</span>
@@ -60,7 +64,15 @@
       <div class="session-top">
         <div class="session-head">
           <h2>Active Session</h2>
-          <button type="button" class="clear-btn" (click)="clearOrder()">Clear Order</button>
+          <div class="session-actions">
+            <button type="button" class="new-bill-btn" (click)="startNewBill()">New Bill</button>
+            <button type="button" class="clear-btn" (click)="clearOrder()">Clear Order</button>
+          </div>
+        </div>
+
+        <div class="session-feedback">
+          <p class="status-msg status-error" *ngIf="saleError">{{ saleError }}</p>
+          <p class="status-msg status-success" *ngIf="saleSuccess">{{ saleSuccess }}</p>
         </div>
 
         <div class="customer-card">
@@ -138,15 +150,15 @@
         <div class="payment-split">
           <label>
             <span>CASH AMOUNT</span>
-            <input type="number" min="0" step="0.01" [(ngModel)]="payment.cash" />
+            <input type="number" min="0" step="1.00" [(ngModel)]="payment.cash" />
           </label>
           <label>
             <span>CARD AMOUNT</span>
-            <input type="number" min="0" step="0.01" [(ngModel)]="payment.card" />
+            <input type="number" min="0" step="1.00" [(ngModel)]="payment.card" />
           </label>
           <label>
             <span>UPI AMOUNT</span>
-            <input type="number" min="0" step="0.01" [(ngModel)]="payment.upi" />
+            <input type="number" min="0" step="1.00" [(ngModel)]="payment.upi" />
           </label>
         </div>
 
@@ -162,10 +174,7 @@
           Please Wait...
         </ng-template>
 
-        <app-please-wait *ngIf="isCompletingSale" message="Please wait... completing sale."></app-please-wait>
         <p class="status-msg status-error" *ngIf="hasOrderItemWithoutInventory && !isCompletingSale">One or more items are missing inventory mapping. Complete Sale may fail until inventory IDs are available.</p>
-        <p class="status-msg status-error" *ngIf="saleError">{{ saleError }}</p>
-        <p class="status-msg status-success" *ngIf="saleSuccess">{{ saleSuccess }}</p>
         <button type="button" class="download-invoice-btn" *ngIf="hasInvoiceDocument && !isCompletingSale" (click)="downloadInvoice()">
           <mat-icon>download</mat-icon>
           Download Invoice PDF

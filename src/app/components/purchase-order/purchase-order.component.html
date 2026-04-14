@@ -1,0 +1,216 @@
+<div class="po-root container">
+  <button class="back-link" type="button" (click)="backToInventory()">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Inventory
+  </button>
+
+  <header class="po-header">
+    <h2>Create Purchase Order</h2>
+    <button
+      mat-flat-button
+      color="primary"
+      class="generate-btn"
+      (click)="generatePurchaseOrder()"
+      [disabled]="isCreatingPurchase"
+    >
+      {{ isCreatingPurchase ? 'Creating Purchase Order...' : 'Generate Purchase Order' }}
+    </button>
+  </header>
+
+  <p [class]="statusBannerClass" *ngIf="statusMessage">{{ statusMessage }}</p>
+
+  <div class="submit-loader" *ngIf="isCreatingPurchase">
+    <app-please-wait message="Please wait... creating purchase order."></app-please-wait>
+  </div>
+
+  <div class="po-grid">
+    <section class="left-col">
+      <article class="card supplier-card">
+        <div class="supplier-block">
+          <div class="label">
+            SUPPLIER DETAILS
+            <span class="required-indicator" aria-hidden="true">*</span>
+          </div>
+
+          <div class="lookup-field" [class.lookup-field-invalid]="showSupplierRequiredError">
+            <mat-icon>apartment</mat-icon>
+            <input
+              type="text"
+              [ngModel]="supplierQuery"
+              (ngModelChange)="onSupplierQueryChange($event)"
+              required
+              aria-required="true"
+              placeholder="Search supplier by name..."
+            />
+          </div>
+
+          <div class="mat-error" *ngIf="showSupplierRequiredError">Supplier name is required.</div>
+
+          <div class="lookup-options" *ngIf="supplierSearching || supplierSearchError || supplierOptions.length">
+            <div class="lookup-state" *ngIf="supplierSearching">Searching suppliers...</div>
+            <div class="lookup-state error" *ngIf="!supplierSearching && supplierSearchError">{{ supplierSearchError }}</div>
+
+            <button
+              type="button"
+              class="lookup-item"
+              *ngFor="let supplier of supplierOptions"
+              (click)="selectSupplier(supplier)"
+            >
+              <strong>{{ supplier.supplierName }}</strong>
+              <span>{{ supplier.contactPerson }} • {{ supplier.phone }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="supplier-block contact-block">
+          <div class="label">CONTACT</div>
+
+          <ng-container *ngIf="hasSelectedSupplier; else contactPlaceholder">
+            <div class="contact-main">{{ supplierName }}</div>
+            <div class="contact-main">{{ supplierEmail }}</div>
+            <div class="contact-sub phone-highlight">{{ supplierPhone }}</div>
+            <div class="contact-sub person-highlight">Contact Person: {{ supplierContactPerson }}</div>
+            <div class="contact-sub">Address: {{ supplierAddress }}</div>
+          </ng-container>
+
+          <ng-template #contactPlaceholder>
+            <div class="contact-placeholder">Select a supplier to view contact details.</div>
+          </ng-template>
+        </div>
+      </article>
+
+      <article class="card order-items-card">
+        <div class="table-head">
+          <h3>Order Items</h3>
+          <span class="items-chip">{{ selectedCount }} ITEMS SELECTED</span>
+        </div>
+
+        <div class="empty-state" *ngIf="!orderItems.length">
+          No selected products. Return to Inventory Alert and choose products.
+        </div>
+
+        <table *ngIf="orderItems.length">
+          <thead>
+            <tr>
+              <th>PRODUCT NAME</th>
+              <!-- <th>SKU</th> -->
+              <th>IN STOCK</th>
+              <th>ORDER QTY</th>
+              <th>UNIT COST</th>
+              <th>TOTAL</th>
+              <th class="action-col">ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of orderItems; trackBy: trackBySku">
+              <td class="product-col">
+                <div class="name">{{ item.productName }}</div>
+                <div class="meta">Tablets • Pack</div>
+              </td>
+              <!-- <td class="sku-col">{{ item.sku }}</td> -->
+              <td>
+                <span class="stock-pill" [ngClass]="item.qtyPillClass">{{ item.inStock }}</span>
+              </td>
+              <td>
+                <input
+                  class="qty-input"
+                  type="number"
+                  min="1"
+                  [ngModel]="item.orderQty"
+                  (ngModelChange)="setQuantity(item, $event)"
+                />
+              </td>
+              <td>{{ item.unitCost | currency:'INR':'symbol':'1.2-2' }}</td>
+              <td class="line-total">{{ getLineTotal(item) | currency:'INR':'symbol':'1.2-2' }}</td>
+              <td class="action-col">
+                <button
+                  type="button"
+                  class="delete-row-btn"
+                  (click)="removeOrderItem(item)"
+                  [attr.aria-label]="'Delete ' + item.productName"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="search-placeholder search-catalog">
+          <mat-icon>add_circle</mat-icon>
+
+          <input
+            type="text"
+            [ngModel]="medicineQuery"
+            (ngModelChange)="onMedicineQueryChange($event)"
+            placeholder="Search product catalog to add more items..."
+          />
+
+          <span>TYPE TO SEARCH</span>
+        </div>
+
+        <div class="lookup-options medicine-options" *ngIf="medicineSearching || medicineSearchError || medicineOptions.length">
+          <div class="lookup-state" *ngIf="medicineSearching">Searching medicines...</div>
+          <div class="lookup-state error" *ngIf="!medicineSearching && medicineSearchError">{{ medicineSearchError }}</div>
+
+          <button
+            type="button"
+            class="lookup-item"
+            *ngFor="let medicine of medicineOptions"
+            (click)="selectMedicine(medicine)"
+          >
+            <strong>{{ medicine.productName }}</strong>
+            <span>{{ medicine.subtitle || 'Tap to add item to order' }}</span>
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <aside class="right-col">
+      <article class="card summary-card">
+        <h3>Order Summary</h3>
+
+        <div class="summary-row">
+          <span>Subtotal ({{ selectedCount }} items)</span>
+          <strong>{{ subtotal | currency:'INR':'symbol':'1.2-2' }}</strong>
+        </div>
+
+        <!-- Estimated Tax removed per request -->
+
+        <div class="summary-row">
+          <span>Shipping &amp; Handling</span>
+          <strong>
+            <em>FREE</em>
+            {{ shippingFee | currency:'INR':'symbol':'1.2-2' }}
+          </strong>
+        </div>
+
+        <div class="total-block">
+          <small>TOTAL AMOUNT</small>
+          <div class="total-value">{{ grandTotal | currency:'INR':'symbol':'1.2-2' }}</div>
+        </div>
+
+        <div class="alert-box" *ngIf="lowInventoryCount > 0">
+          <mat-icon>info</mat-icon>
+          <p>
+            <strong>Inventory Alert:</strong>
+            {{ lowInventoryCount }} items are currently low in stock and have been prioritized.
+          </p>
+        </div>
+      </article>
+
+      <article class="card delivery-card">
+        <h4>DELIVERY EXPECTATIONS</h4>
+        <div class="shipping-line">
+          <span class="icon-wrap"><mat-icon>local_shipping</mat-icon></span>
+          <div>
+            <strong>Standard Shipping</strong>
+          </div>
+        </div>
+
+        <label for="poNotes">PO Notes (Internal)</label>
+        <textarea id="poNotes" [(ngModel)]="poNotes" placeholder="Add specific instructions for this order..."></textarea>
+      </article>
+    </aside>
+  </div>
+</div>

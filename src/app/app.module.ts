@@ -23,6 +23,10 @@ import { AddProductComponent } from './components/add-product/add-product.compon
 import { MedicinesBillingComponent } from './components/medicines-billing/medicines-billing.component';
 import { BillingHistoryComponent } from './components/billing-history/billing-history.component';
 import { ProcessReturnComponent } from './components/process-return/process-return.component';
+import { LowStockAlertComponent } from './components/low-stock-alert/low-stock-alert.component';
+import { PurchaseOrderComponent } from './components/purchase-order/purchase-order.component';
+import { PurchaseOrderTrackingComponent } from './components/purchase-order-tracking/purchase-order-tracking.component';
+import { ReceiveDeliveryComponent } from './components/receive-delivery/receive-delivery.component';
 import { PleaseWaitComponent } from './shared/please-wait/please-wait.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
@@ -40,7 +44,11 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     AddProductComponent,
     MedicinesBillingComponent
     ,BillingHistoryComponent
-    ,ProcessReturnComponent
+    ,ProcessReturnComponent,
+    LowStockAlertComponent,
+    PurchaseOrderComponent,
+    PurchaseOrderTrackingComponent,
+    ReceiveDeliveryComponent
   ],
   imports: [
     BrowserModule,

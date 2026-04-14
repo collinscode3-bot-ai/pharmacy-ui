@@ -12,10 +12,28 @@
         <mat-icon>inventory_2</mat-icon>
         <span>Medicine Catalog</span>
       </a>
-      <a class="nav-item" href="javascript:void(0)">
-        <mat-icon>inventory</mat-icon>
-        <span>Inventory</span>
-      </a>
+      <div class="nav-subgroup" routerLinkActive="group-active">
+        <div
+          class="nav-item nav-parent"
+          aria-label="Inventory"
+          role="button"
+          tabindex="0"
+          (click)="toggleInventorySublinks()"
+          (keydown.enter)="toggleInventorySublinks()"
+          (keydown.space)="toggleInventorySublinks(); $event.preventDefault()"
+        >
+          <mat-icon>inventory</mat-icon>
+          <span>Inventory</span>
+        </div>
+        <ng-container *ngIf="inventoryExpanded">
+          <a class="nav-sublink" routerLink="/purchase-order" routerLinkActive="active">
+            Create Purchase Order
+          </a>
+          <a class="nav-sublink" routerLink="/inventory/purchase-order-tracking" routerLinkActive="active">
+            Purchase Order Tracking
+          </a>
+        </ng-container>
+      </div>
       <a class="nav-item" href="javascript:void(0)">
         <mat-icon>local_shipping</mat-icon>
         <span>Suppliers</span>

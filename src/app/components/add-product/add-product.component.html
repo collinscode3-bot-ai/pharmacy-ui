@@ -3,6 +3,9 @@
   <p class="sub">Register a new pharmaceutical product into the clinical database.</p>
 
   <form class="add-form product-card" #productForm="ngForm">
+    <div class="form-alert form-alert-success" *ngIf="saveSuccess">{{ saveSuccess }}</div>
+    <div class="form-alert form-alert-error" *ngIf="saveError">{{ saveError }}</div>
+
     <section class="form-block">
       <h3><span class="panel-icon blue"><mat-icon>verified</mat-icon></span> Basic Identification</h3>
       <div class="row two-col">
@@ -181,8 +184,6 @@
     </section>
 
     <div class="divider"></div>
-    <div class="save-success" *ngIf="saveSuccess">{{ saveSuccess }}</div>
-    <div class="mat-error" *ngIf="saveError">{{ saveError }}</div>
     <div class="form-actions">
       <button type="button" class="cancel-btn" (click)="cancel()">Cancel</button>
       <button type="button" class="save-btn" [disabled]="saving || !!saveSuccess" (click)="save(productForm)">{{ saveButtonText }}</button>

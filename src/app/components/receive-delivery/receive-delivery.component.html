@@ -1,0 +1,233 @@
+<div class="receive-root container">
+  <div *ngIf="loadingPurchaseDetails">
+    <app-please-wait message="Please wait... loading purchase details."></app-please-wait>
+  </div>
+
+  <form *ngIf="!loadingPurchaseDetails" #receiveForm="ngForm" (ngSubmit)="acceptDelivery(receiveForm)" novalidate>
+    <div class="breadcrumb-row">
+      <span>Purchase Orders</span>
+      <mat-icon>chevron_right</mat-icon>
+      <span class="active">Receive Delivery</span>
+    </div>
+
+    <h1>Receive Delivery &amp; Verify Items</h1>
+
+    <p [class]="statusMessageClass" *ngIf="statusMessage">{{ statusMessage }}</p>
+
+    <section class="card summary-card">
+      <div class="summary-col">
+        <small>PO NUMBER</small>
+        <strong>{{ poNumber }}</strong>
+      </div>
+      <div class="summary-col">
+        <small>ORDER DATE</small>
+        <strong>{{ orderDate }}</strong>
+      </div>
+      <div class="summary-col">
+        <small>SUPPLIER NAME</small>
+        <strong>{{ supplierName }}</strong>
+      </div>
+      <div class="summary-col">
+        <small>CURRENT STATUS</small>
+        <span [class]="statusClass">{{ currentStatusLabel }}</span>
+      </div>
+    </section>
+
+    <section class="verify-head">
+      <h3>Item Verification</h3>
+      <!-- <span>{{ pendingReceiptCount }} items pending receipt</span> -->
+    </section>
+
+    <section class="card table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>PRODUCT NAME</th>
+              <th>ORDERED</th>
+              <th>BATCH NO. <span class="required-star">*</span></th>
+              <th>EXPIRY DATE <span class="required-star">*</span></th>
+              <th>PURCHASING PRICE <span class="required-star">*</span></th>
+              <th>SELLING PRICE <span class="required-star">*</span></th>
+              <th>RECEIVED QTY <span class="required-star">*</span></th>
+              <th>DELIVER STATUS <span class="required-star">*</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of lineItems; let i = index">
+              <td class="product-col">
+                <div class="name">{{ item.productName }}</div>
+                <!-- <div class="sku">SKU: {{ item.sku }}</div> -->
+              </td>
+              <td class="ordered-col">{{ item.orderedUnits }} Units</td>
+              <td>
+                <input
+                  class="batch-input"
+                  type="text"
+                  [(ngModel)]="item.batchNo"
+                  [name]="'batchNo' + i"
+                  #batchNoCtrl="ngModel"
+                  required
+                  placeholder="Enter"
+                />
+                <div class="field-error" *ngIf="batchNoCtrl.invalid && (batchNoCtrl.touched || submitAttempted)">
+                  Batch no is required.
+                </div>
+              </td>
+              <td>
+                <input
+                  class="expiry-input"
+                  type="date"
+                  [(ngModel)]="item.expiryDate"
+                  [name]="'expiryDate' + i"
+                  #expiryCtrl="ngModel"
+                  required
+                />
+                <div class="field-error" *ngIf="expiryCtrl.invalid && (expiryCtrl.touched || submitAttempted)">
+                  Expiry date is required.
+                </div>
+              </td>
+              <td>
+                <div class="money-input">
+                  <span>₹</span>
+                  <input
+                    class="purchase-input"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    [(ngModel)]="item.purchasePrice"
+                    [name]="'purchasePrice' + i"
+                    #purchaseCtrl="ngModel"
+                    required
+                  />
+                </div>
+                <div class="field-error" *ngIf="purchaseCtrl.invalid && (purchaseCtrl.touched || submitAttempted)">
+                  Purchase price is required.
+                </div>
+              </td>
+              <td>
+                <div class="money-input">
+                  <span>₹</span>
+                  <input
+                    class="sell-input"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    [(ngModel)]="item.sellPrice"
+                    [name]="'sellPrice' + i"
+                    #sellCtrl="ngModel"
+                    required
+                  />
+                </div>
+                <div class="field-error" *ngIf="sellCtrl.invalid && (sellCtrl.touched || submitAttempted)">
+                  Sell price is required.
+                </div>
+              </td>
+              <td>
+                <input
+                  class="received-input"
+                  type="number"
+                  min="0"
+                  [(ngModel)]="item.receivedUnits"
+                  [name]="'receivedUnits' + i"
+                  #receivedCtrl="ngModel"
+                  required
+                />
+                <div class="field-error" *ngIf="receivedCtrl.invalid && (receivedCtrl.touched || submitAttempted)">
+                  Received quantity is required.
+                </div>
+              </td>
+              <td>
+                <select
+                  class="delivery-status-select"
+                  [(ngModel)]="item.deliveryStatus"
+                  [name]="'deliveryStatus' + i"
+                  #deliveryStatusCtrl="ngModel"
+                  required
+                >
+                  <option value="" disabled>Select status</option>
+                  <option *ngFor="let status of deliveryStatusOptions" [value]="status">{{ status }}</option>
+                </select>
+                <div class="field-error" *ngIf="deliveryStatusCtrl.invalid && (deliveryStatusCtrl.touched || submitAttempted)">
+                  Deliver status is required.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="card doc-card">
+        <h4>DOCUMENTATION DETAILS</h4>
+
+        <div class="doc-row">
+          <label>
+            <span>Invoice Number <span class="required-star">*</span></span>
+            <input
+              type="text"
+              [(ngModel)]="invoiceNumber"
+              name="invoiceNumber"
+              #invoiceNumberCtrl="ngModel"
+              required
+              placeholder="e.g. INV-2023-4421"
+            />
+            <div class="field-error" *ngIf="invoiceNumberCtrl.invalid && (invoiceNumberCtrl.touched || submitAttempted)">
+              Invoice number is required.
+            </div>
+          </label>
+
+          <label>
+            <span>Invoice Date <span class="required-star">*</span></span>
+            <input
+              type="date"
+              [(ngModel)]="invoiceDate"
+              name="invoiceDate"
+              #invoiceDateCtrl="ngModel"
+              required
+            />
+            <div class="field-error" *ngIf="invoiceDateCtrl.invalid && (invoiceDateCtrl.touched || submitAttempted)">
+              Invoice date is required.
+            </div>
+          </label>
+        </div>
+
+        <label class="remarks-field">
+          <span>Remarks</span>
+          <textarea [(ngModel)]="remarks" name="remarks" placeholder="Note any discrepancies or damaged packaging here..."></textarea>
+        </label>
+      </article>
+
+      <article class="card upload-card">
+        <h4>INVOICE UPLOAD <span class="required-star">*</span></h4>
+
+        <label class="upload-drop" for="invoiceUpload">
+          <mat-icon>upload_file</mat-icon>
+          <strong>Drag &amp; drop invoice</strong>
+          <small>PDF, JPG, or PNG up to 10MB</small>
+          <span class="upload-btn">Select File</span>
+        </label>
+
+        <input id="invoiceUpload" type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onInvoiceSelected($event)" />
+
+        <p class="file-name" *ngIf="selectedInvoiceName">{{ selectedInvoiceName }}</p>
+        <div class="field-error" *ngIf="showInvoiceReadError">{{ invoiceReadError }}</div>
+        <div class="field-error" *ngIf="showInvoiceUploadError">Invoice upload is required.</div>
+      </article>
+    </section>
+
+    <div class="page-actions">
+      <button type="button" class="cancel-btn" (click)="backToTracking()">Cancel</button>
+      <button type="submit" class="accept-btn" [disabled]="!isFormValid(receiveForm) || savingReceipt">
+        <mat-icon>check_circle</mat-icon>
+        {{ savingReceipt ? 'Saving Receipt...' : 'Accept Delivery' }}
+      </button>
+    </div>
+
+    <div class="save-loader" *ngIf="savingReceipt">
+      <app-please-wait message="Please wait... saving purchase receipt."></app-please-wait>
+    </div>
+
+  </form>
+</div>

@@ -9,6 +9,10 @@ import { AddProductComponent } from './components/add-product/add-product.compon
 import { MedicinesBillingComponent } from './components/medicines-billing/medicines-billing.component';
 import { BillingHistoryComponent } from './components/billing-history/billing-history.component';
 import { ProcessReturnComponent } from './components/process-return/process-return.component';
+import { LowStockAlertComponent } from './components/low-stock-alert/low-stock-alert.component';
+import { PurchaseOrderComponent } from './components/purchase-order/purchase-order.component';
+import { PurchaseOrderTrackingComponent } from './components/purchase-order-tracking/purchase-order-tracking.component';
+import { ReceiveDeliveryComponent } from './components/receive-delivery/receive-delivery.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -16,6 +20,10 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'inventory', component: LowStockAlertComponent, canActivate: [AuthGuard] },
+  { path: 'inventory/purchase-order-tracking', component: PurchaseOrderTrackingComponent, canActivate: [AuthGuard] },
+  { path: 'inventory/purchase-order-tracking/receive-delivery/:poNumber', component: ReceiveDeliveryComponent, canActivate: [AuthGuard] },
+  { path: 'purchase-order', component: PurchaseOrderComponent, canActivate: [AuthGuard] },
   { path: 'medicine-catalog', component: MedicineCatalogComponent, canActivate: [AuthGuard] },
   { path: 'billing', component: MedicinesBillingComponent, canActivate: [AuthGuard] },
   { path: 'billing-history', component: BillingHistoryComponent, canActivate: [AuthGuard] },

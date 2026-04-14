@@ -13,6 +13,13 @@ interface Transaction {
   totalAmount: number;
 }
 
+interface InvoiceDocument {
+  fileName?: string;
+  contentType?: string;
+  base64Content?: string;
+  archivePath?: string;
+}
+
 interface SaleSearchResult {
   billNo?: string;
   id?: number | string;
@@ -54,6 +61,7 @@ export class BillingHistoryComponent implements OnInit {
   totalElements = 0;
   totalPages = 0;
   loading = false;
+  openingBillId = '';
   errorMessage = '';
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -80,6 +88,61 @@ export class BillingHistoryComponent implements OnInit {
       return;
     }
     this.router.navigate(['/process-return', id]);
+  }
+
+  viewBill(t: Transaction): void {
+    const billNo = String(t.billNo || '').trim();
+    if (!billNo) {
+      this.errorMessage = 'Bill number is missing for this transaction.';
+      return;
+    }
+
+    const popup = window.open('', '_blank', 'noopener,noreferrer');
+    this.openingBillId = billNo;
+    this.errorMessage = '';
+
+    this.http.get<InvoiceDocument>(API_ENDPOINTS.SALES.INVOICE(billNo))
+      .pipe(catchError(() => of(null)))
+      .subscribe(invoiceDoc => {
+        this.openingBillId = '';
+
+        if (!invoiceDoc) {
+          if (popup) {
+            popup.close();
+          }
+          this.errorMessage = 'Failed to fetch bill invoice. Please try again.';
+          return;
+        }
+
+        const base64 = this.normalizeBase64(invoiceDoc.base64Content ?? '');
+        if (!base64) {
+          if (popup) {
+            popup.close();
+          }
+          this.errorMessage = 'Bill PDF is not available for this transaction.';
+          return;
+        }
+
+        try {
+          const bytes = this.base64ToBytes(base64);
+          const contentType = (invoiceDoc.contentType || 'application/pdf').trim();
+          const blob = new Blob([bytes], { type: contentType });
+          const objectUrl = URL.createObjectURL(blob);
+
+          if (popup) {
+            popup.location.href = objectUrl;
+          } else {
+            window.open(objectUrl, '_blank', 'noopener,noreferrer');
+          }
+
+          setTimeout(() => URL.revokeObjectURL(objectUrl), 15000);
+        } catch {
+          if (popup) {
+            popup.close();
+          }
+          this.errorMessage = 'Unable to open bill PDF from API response.';
+        }
+      });
   }
 
   applySearch(): void {
@@ -182,6 +245,22 @@ export class BillingHistoryComponent implements OnInit {
       case 'Bill No':
       default:             return 'billNo';
     }
+  }
+
+  private normalizeBase64(value: string): string {
+    if (!value) {
+      return '';
+    }
+    return value.includes(',') ? (value.split(',').pop() || '') : value;
+  }
+
+  private base64ToBytes(base64: string): Uint8Array {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
   }
 
   private getTodayForApi(): string {

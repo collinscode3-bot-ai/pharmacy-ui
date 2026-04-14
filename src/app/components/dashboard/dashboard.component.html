@@ -25,7 +25,7 @@
       <p>{{ dailySalesSummary?.note || 'v last average' }}</p>
     </article>
 
-    <article class="card metric">
+    <article class="card metric" (click)="navigateToLowStock()">
       <div class="label-row">
         <span class="label">Low Stock Alerts</span>
         <span class="badge red"><mat-icon>warning</mat-icon></span>
@@ -89,7 +89,7 @@
     <article class="card activity-panel">
       <div class="panel-top">
         <h3>Recent Activity</h3>
-        <a href="javascript:void(0)">View All</a>
+        <a href="/billing-history" routerLink="/billing-history">View All</a>
       </div>
 
       <ul>
@@ -108,7 +108,7 @@
               <small class="status" [ngClass]="act.status || 'info'">{{ act.statusLabel || act.status || '' }}</small>
             </div>
           </li>
-          <li *ngIf="!recentActivity?.length">No recent activity</li>
+          <li *ngIf="!recentActivity.length">No recent activity</li>
         </ng-container>
         <ng-template #activityLoading>
           <li>Loading activity…</li>
